@@ -8,11 +8,12 @@ interface SideBarProps extends MapActions {
 
 export default function SideBar({
   children,
-  handleClick
+  handleClick,
+  activeBarangay
 }: SideBarProps) {
   return (
     <SidebarProvider>
-      <AppSidebar handleClick={handleClick} />
+      <AppSidebar handleClick={handleClick} activeBarangay={activeBarangay}/>
       <main className="w-full">
         {children}
       </main>

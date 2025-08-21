@@ -15,16 +15,19 @@ import { Input } from "@/components/ui/input"
 import { CallName } from "../sidebarMain"
 
 export const BrgyTable: React.FC<CallName> = ({
-    handleClick
+    handleClick,
+    activeBarangay
 }) => {
+
     const { setOpen, setOpenMobile } = useSidebar()
-    //Remove "_" from brgy listt
+    
+    //Remove "_" from brgy list
     const BrgyFix = BARANGAYS.map((e) => (e.split("_").join(" ")))
     const [filter, setFilter] = useState("")
     const filtered = BrgyFix.filter((brgy) =>
         brgy.toLowerCase().includes(filter.toLowerCase())
     )
-    
+
     return  (
         <div className="col-span-1 lg:col-span-2 ">
         <Input 
@@ -38,14 +41,23 @@ export const BrgyTable: React.FC<CallName> = ({
                     <TableRow key={brgy} className="bg-[#282c34] hover:bg-[#282c34] border-0">
                         <TableCell className="grid font-medium">
                             <Button
-                                className="hover:bg-red-500 hover:text-white transition transition-ease-in-out"
+                                className={`
+                                    hover:ring 
+                                    hover:ring-white-2
+                                    hover:bg-red-500 
+                                    hover:text-white 
+                                    transition 
+                                    transition-ease-in-out 
+                                    ${activeBarangay === brgy.split(" ").join("_") 
+                                    ? "bg-red-500 text-white ring ring-white-2" : ""}
+                                `}
                                 onClick={() => {
                                     handleClick(brgy.split(" ").join("_"))
-                                    setOpen(false) 
+                                    // setOpen(false) 
                                     setOpenMobile(false)
                                 }}
                             >
-                                <span className="font-[Formula]">{brgy}</span>
+                                <span className="font-[Formula] lg:text-[11px]">{brgy}</span>
                             </Button>
                         </TableCell>
                     </TableRow>

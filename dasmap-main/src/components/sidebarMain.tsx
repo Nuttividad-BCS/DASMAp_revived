@@ -9,16 +9,17 @@ import {
   SidebarGroupLabel,
   SidebarMenu
 } from "@/components/ui/sidebar"
-import { MapActions } from "./Map_3D/Map"
 import BrgyTable from "@/components/brgy_Table/brgyTable"
 import * as THREE from "three"
 
 export interface CallName {
   handleClick : (name:string) => void
+  activeBarangay: string
 }
 
 export const AppSidebar: React.FC<CallName> = ({
-    handleClick
+    handleClick,
+    activeBarangay
 }) => {
   const { open } = useSidebar()
 
@@ -38,7 +39,7 @@ export const AppSidebar: React.FC<CallName> = ({
           <SidebarGroupContent>
             <SidebarMenu>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                 <BrgyTable handleClick={handleClick}/>
+                 <BrgyTable handleClick={handleClick} activeBarangay={activeBarangay}/>
               </div>
             </SidebarMenu>
           </SidebarGroupContent>

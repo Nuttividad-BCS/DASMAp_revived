@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState, useRef, Suspense} from "react"
 import { Environment, PerspectiveCamera } from "@react-three/drei"
 import { DasMap } from "@/components/Map_3D/Map"
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useFrame, useThree} from '@react-three/fiber'
 import SideBar from "@/components/sidebarProvider"
 import * as THREE from "three"
 import { SidebarTrigger } from '@/components/ui/sidebar'
@@ -18,13 +18,11 @@ export const Route = createFileRoute('/')({
 
 function App() {
   const [activeBarangay, setActiveBarangay] = useState("")
-  const [clicked, setClicked] = useState(false)
   const [targetPosition, setTargetPosition] = useState([0, 0, 0]) 
   const brgyRef = useRef<RefStruct>({}) 
 
   //Reset Cam on Click
   const resetCamera = () => {
-    setClicked(false)
     setTargetPosition([0, 0, 0])
   }
 
@@ -41,12 +39,10 @@ function App() {
   function handleClick(name:string) {
     if (activeBarangay === name) {
         setActiveBarangay("")
-        setClicked(false)
         resetCamera()
 
     } else if (!activeBarangay) {
       setActiveBarangay(name)
-      setClicked(true)
       if (brgyRef.current && brgyRef.current[name]) {
         getPosition(name)
       }
@@ -56,7 +52,6 @@ function App() {
   return (
     <SideBar 
       activeBarangay={activeBarangay}
-      clicked={clicked}
       targetPosition={[0,0,0]}
       handleClick={handleClick}
       brgyRef={brgyRef}
@@ -71,7 +66,6 @@ function App() {
             <PerspectiveCamera makeDefault position={[10, 15, 10]} />
             <DasMap
               activeBarangay={activeBarangay}
-              clicked={clicked}
               targetPosition={targetPosition as [number,number,number]}
               handleClick={handleClick}
               brgyRef={brgyRef}
