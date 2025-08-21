@@ -37,10 +37,10 @@ function App() {
 
   //Global Click Function
   function handleClick(name:string) {
+    
     if (activeBarangay === name) {
         setActiveBarangay("")
         resetCamera()
-
     } else if (!activeBarangay) {
       setActiveBarangay(name)
       if (brgyRef.current && brgyRef.current[name]) {

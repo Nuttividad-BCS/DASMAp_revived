@@ -27,7 +27,6 @@ export const BrgyTable: React.FC<CallName> = ({
     const filtered = BrgyFix.filter((brgy) =>
         brgy.toLowerCase().includes(filter.toLowerCase())
     )
-
     return  (
         <div className="col-span-1 lg:col-span-2 ">
         <Input 
@@ -42,12 +41,16 @@ export const BrgyTable: React.FC<CallName> = ({
                         <TableCell className="grid font-medium">
                             <Button
                                 className={`
+                                    transform
+                                    hover:scale-105
                                     hover:ring 
                                     hover:ring-white-2
                                     hover:bg-red-500 
                                     hover:text-white 
+                                    hover:shadow-xl/30
                                     transition 
                                     transition-ease-in-out 
+                                    shadow-xl/15
                                     ${activeBarangay === brgy.split(" ").join("_") 
                                     ? "bg-red-500 text-white ring ring-white-2" : ""}
                                 `}

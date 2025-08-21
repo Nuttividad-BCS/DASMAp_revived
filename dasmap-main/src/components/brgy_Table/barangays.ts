@@ -14,7 +14,7 @@ export const BARANGAYS = [
     'San_Dionisio', 'San_Francisco_I',
     'San_IL_I', 'San_IL_II',
     'San_Jose', 'San_Juan',
-    'San_Lorenzo_Ruis_I', 'San_Lorenzo_Ruis_II',
+    'San_Lorenzo_Ruis_I', 'San_Lorenzo_Ruiz_II',
     'San_Luis_I', 'San_Luis_II',
     'San_Manuel_I', 'San_Manuel_II',
     'San_Mateo', 'San_Miguel_I', 'San_Miguel_II',
@@ -25,7 +25,7 @@ export const BARANGAYS = [
     'Santa_Lucia', 'Santa_Maria',
     'Santo_Cristo', 'Santo_Estoban',
     'Santo_Nino_I', 'Santo_Nino_II',
-    'Santo_Peter_I', 'Santo_Peter_II',
+    'St_Peter_I', 'St_Peter_II',
     'Victoria_Reyes',
     'Zone_I', 'Zone_IA', 'Zone_II', 'Zone_III', 'Zone_IV',
   ]
