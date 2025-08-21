@@ -7,56 +7,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { useState, useRef } from "react"
+import { useSidebar } from "../ui/sidebar"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { BARANGAYS } from "@/components/brgy_Table/barangays"
 import { Input } from "@/components/ui/input"
-import { resetCamera } from "@/components/helpers/resetCam"
-import * as THREE from 'three'
+import { CallName } from "../sidebarMain"
 
-interface RefStruct {
-  [key: string]: any 
-}
-
-function BrgyTable() {
-    //props for click handling
-    const [activeBarangay, setActiveBarangay] = useState("")
-    const [clicked, setClicked] = useState(false)
-    const [targetPosition, setTargetPosition] = useState([0, 0, 0]) 
-    const brgyRef = useRef<RefStruct>({}) 
-
+export const BrgyTable: React.FC<CallName> = ({
+    handleClick
+}) => {
+    const { setOpen, setOpenMobile } = useSidebar()
     //Remove "_" from brgy listt
     const BrgyFix = BARANGAYS.map((e) => (e.split("_").join(" ")))
     const [filter, setFilter] = useState("")
     const filtered = BrgyFix.filter((brgy) =>
         brgy.toLowerCase().includes(filter.toLowerCase())
     )
-    //Filtering
-
-
-    function handleClick(name:string) {
-
-        if (activeBarangay === name) {
-            setActiveBarangay("")
-            setClicked(false)
-            resetCamera(setClicked, setTargetPosition)
-
-        } else if (!activeBarangay) {
-
-            setActiveBarangay(name)
-            setClicked(true)
-
-            if (brgyRef.current && brgyRef.current[name]) {
-                const mesh = brgyRef.current[name]
-                const box = new THREE.Box3().setFromObject(mesh)
-                const center = new THREE.Vector3()
-                box.getCenter(center)
-                setTargetPosition([center.x, center.y, center.z])
-            }
-        }
-    }
-
-
+    
     return  (
         <div className="col-span-1 lg:col-span-2 ">
         <Input 
@@ -71,7 +39,11 @@ function BrgyTable() {
                         <TableCell className="grid font-medium">
                             <Button
                                 className="hover:bg-red-500 hover:text-white transition transition-ease-in-out"
-                                onClick={() => handleClick(brgy.split(" ").join("_"))}
+                                onClick={() => {
+                                    handleClick(brgy.split(" ").join("_"))
+                                    setOpen(false) 
+                                    setOpenMobile(false)
+                                }}
                             >
                                 <span className="font-[Formula]">{brgy}</span>
                             </Button>

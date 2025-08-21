@@ -5,7 +5,6 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanstackDevtools } from '@tanstack/react-devtools'
-import SideBar from "@/components/sidebarProvider"
 import Header from '../components/Header'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
@@ -49,7 +48,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="h-full w-full flex">
+      <body className="h-full w-full flex-1 flex-col">
         <TanstackDevtools
           config={{
             position: 'bottom-left',
@@ -62,11 +61,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             TanStackQueryDevtools,
           ]}
         />
-          <SideBar>
-            <Header />
-            <div className="flex-1">{children}</div>
-            <Scripts />
-          </SideBar>
+          <Header/>
+          <div className="flex-1">{children}</div>
+          <Scripts />
       </body>
     </html>
   )
