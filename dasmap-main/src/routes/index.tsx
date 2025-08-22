@@ -66,7 +66,7 @@ function App() {
         <div className="fixed top-2 left-2 z-50">
           <SidebarTrigger />
         </div>
-        {/*<Canvas>
+        <Canvas>
           <Suspense fallback={null}>
             <Environment preset="sunset" />
             <PerspectiveCamera makeDefault position={[10, 15, 10]} />
@@ -78,7 +78,7 @@ function App() {
               onHover={setHoveredBrgy}
             />
           </Suspense>
-        </Canvas>*/}
+        </Canvas>
         {hoveredBrgy && (
           <div className="
             absolute 
