@@ -16,6 +16,10 @@
   display: none;
 }
 
+.overflow-y-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
 .scroll-hidden {
   -ms-overflow-style: none; /* IE/Edge */
   scrollbar-width: none; /* Firefox */

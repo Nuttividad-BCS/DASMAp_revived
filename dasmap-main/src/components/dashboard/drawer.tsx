@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/drawer"
 import { Button } from "../ui/button"
 import { useState, useEffect } from "react"
+import { motion, useDragControls } from "framer-motion"
 import React from "react"
 import RecovChart from "@/components/dashboard/stats/recovery"
 import MortalChart from "@/components/dashboard/stats/mortality"
@@ -25,6 +26,7 @@ export const DashBoard: React.FC<DashProps> = ({
     activeBarangay
 }) => {
     const [ open, setOpen ] = useState(false)
+    
 
     useEffect(() => {
         if (activeBarangay == null || activeBarangay == "") {
@@ -43,16 +45,17 @@ export const DashBoard: React.FC<DashProps> = ({
                 flex
                 items-center
                 scroll-hidden
-                overflow-y-auto
                 bg-[#1D2129] 
                 font-[Formula] 
-                h-[550px] 
+                h-[80vh] 
                 lg:h-[800px] 
                 lg:max-h-[500px] 
                 bg-black/[0]
                 lg:bg-black/[.70]
             ">
                 <div className="
+                overflow-y-auto
+                h-full
                 grid
                 grid-cols-1
                 lg:grid-cols-6
