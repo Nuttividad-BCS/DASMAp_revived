@@ -8,6 +8,7 @@ import SideBar from "@/components/sidebarProvider"
 import { DashBoard } from '@/components/dashboard/drawer'
 import * as THREE from "three"
 import { SidebarTrigger } from '@/components/ui/sidebar'
+import Header from '../components/Header'
 
 interface RefStruct {
   [key: string]: any 
@@ -20,6 +21,7 @@ export const Route = createFileRoute('/')({
 function App() {
   const [activeBarangay, setActiveBarangay] = useState("")
   const [targetPosition, setTargetPosition] = useState([0, 0, 0]) 
+  const [hoveredBrgy, setHoveredBrgy] = useState<string | null>(null)
   const brgyRef = useRef<RefStruct>({}) 
 
   //Reset Cam on Click
@@ -51,17 +53,20 @@ function App() {
   }
 
   return (
+    
     <SideBar 
       activeBarangay={activeBarangay}
       targetPosition={[0,0,0]}
       handleClick={handleClick}
       brgyRef={brgyRef}
+      onHover={hoveredBrgy}
     >
-      <div className="flex flex-1 justify-content-center h-screen bg-[#1D2129]">
+      <div className="flex flex-col flex-1 justify-content-center h-screen bg-[#1D2129]">
+        <Header/>
         <div className="fixed top-2 left-2 z-50">
           <SidebarTrigger />
         </div>
-        <Canvas>
+        {/*<Canvas>
           <Suspense fallback={null}>
             <Environment preset="sunset" />
             <PerspectiveCamera makeDefault position={[10, 15, 10]} />
@@ -70,9 +75,25 @@ function App() {
               targetPosition={targetPosition as [number,number,number]}
               handleClick={handleClick}
               brgyRef={brgyRef}
+              onHover={setHoveredBrgy}
             />
           </Suspense>
-        </Canvas>
+        </Canvas>*/}
+        {hoveredBrgy && (
+          <div className="
+            absolute 
+            top-25 
+            right-4 
+            bg-red-500 
+            text-white 
+            lg:text-2xl 
+            px-2 
+            py-1 
+            rounded 
+          ">
+            {hoveredBrgy.split("_").join(" ")}
+          </div>
+        )}
       </div>
       <DashBoard handleClick={handleClick} activeBarangay={activeBarangay}/>
     </SideBar>

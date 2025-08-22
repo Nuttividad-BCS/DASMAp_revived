@@ -38,15 +38,19 @@ export const BrgyTable: React.FC<CallName> = ({
             <TableBody className="grid gap-4 grid-cols-1 lg:grid-cols-2 overflow-x-hidden">
                 {filtered.map((brgy) => (
                     <TableRow key={brgy} className="bg-[#282c34] hover:bg-[#282c34] border-0">
-                        <TableCell className="grid font-medium">
+                        <TableCell className="grid grid-cols-2 font-medium">
                             <Button
                                 className={`
+                                    bg-[#2f3541]
+                                    active:scale-85
+                                    duration-400
+                                    col-span-2
                                     transform
                                     hover:scale-105
                                     hover:ring 
                                     hover:ring-white-2
                                     hover:bg-red-500 
-                                    hover:text-white 
+                                    hover:text-black
                                     hover:shadow-xl/30
                                     transition 
                                     transition-ease-in-out 
@@ -56,6 +60,7 @@ export const BrgyTable: React.FC<CallName> = ({
                                 `}
                                 onClick={() => {
                                     handleClick(brgy.split(" ").join("_"))
+
                                     // setOpen(false) 
                                     setOpenMobile(false)
                                 }}

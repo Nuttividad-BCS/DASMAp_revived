@@ -5,7 +5,6 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanstackDevtools } from '@tanstack/react-devtools'
-import Header from '../components/Header'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
@@ -61,12 +60,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             TanStackQueryDevtools,
           ]}
         />
-          <div className="flex-1">
-            <Header/>
-            {children}
-          </div>
+          {children}      
           <Scripts />
-      </body>
+    </body>
     </html>
   )
 }

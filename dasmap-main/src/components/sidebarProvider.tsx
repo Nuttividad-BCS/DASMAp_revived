@@ -9,7 +9,8 @@ interface SideBarProps extends MapActions {
 export default function SideBar({
   children,
   handleClick,
-  activeBarangay
+  activeBarangay,
+  onHover
 }: SideBarProps) {
   return (
     <SidebarProvider>
