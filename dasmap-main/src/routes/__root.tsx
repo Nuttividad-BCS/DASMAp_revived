@@ -61,8 +61,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             TanStackQueryDevtools,
           ]}
         />
-          <Header/>
-          <div className="flex-1">{children}</div>
+          <div className="flex-1">
+            <Header/>
+            {children}
+          </div>
           <Scripts />
       </body>
     </html>

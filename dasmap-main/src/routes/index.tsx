@@ -5,6 +5,7 @@ import { Environment, PerspectiveCamera } from "@react-three/drei"
 import { DasMap } from "@/components/Map_3D/Map"
 import { Canvas, useFrame, useThree} from '@react-three/fiber'
 import SideBar from "@/components/sidebarProvider"
+import { DashBoard } from '@/components/dashboard/drawer'
 import * as THREE from "three"
 import { SidebarTrigger } from '@/components/ui/sidebar'
 
@@ -73,6 +74,7 @@ function App() {
           </Suspense>
         </Canvas>
       </div>
+      <DashBoard handleClick={handleClick} activeBarangay={activeBarangay}/>
     </SideBar>
   )
 }
