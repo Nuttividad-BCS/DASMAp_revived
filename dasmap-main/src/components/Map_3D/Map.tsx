@@ -1,14 +1,8 @@
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 import { useGLTF, OrbitControls, useBoxProjectedEnv, Html } from '@react-three/drei'
 import { useRef, useEffect, useState } from 'react'
 import { useFrame, useThree, extend } from "@react-three/fiber"
 import * as THREE from 'three'
 import { BrgyMeshInfo } from "@/components/Map_3D/meshInfo"
-extend({ Tooltip,TooltipContent,TooltipTrigger,})
 
 type vectorFormat = [number,number,number]
 
@@ -24,6 +18,7 @@ export interface MapActions {
   targetPosition : vectorFormat
   brgyRef : React.RefObject<Record<string, THREE.Mesh | null>>    
   onHover: (name: string | null) => void 
+  rotate: boolean
 }
 
 function MoveCam({ target, active, targetPosition }: MoveCamProps) {
@@ -82,14 +77,13 @@ function MoveCam({ target, active, targetPosition }: MoveCamProps) {
   return null
 }
 
-
-
 export const DasMap: React.FC<MapActions> = ({
     handleClick,
     activeBarangay,
     targetPosition,
     brgyRef,
-    onHover
+    onHover,
+    rotate
   }) => {
 
   const { nodes, materials } = useGLTF('./DASMA.glb')
@@ -122,7 +116,7 @@ export const DasMap: React.FC<MapActions> = ({
           minPolarAngle={0}
           maxPolarAngle={Math.PI / 3}
           dampingFactor={0.25}
-          autoRotate 
+          autoRotate={rotate}
           autoRotateSpeed={1}
           enablePan={false}
           minDistance={20}

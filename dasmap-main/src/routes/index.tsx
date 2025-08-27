@@ -1,4 +1,5 @@
 "use client"
+import { Button } from '@/components/ui/button'
 import { createFileRoute } from '@tanstack/react-router'
 import { useState, useRef, Suspense} from "react"
 import { Environment, PerspectiveCamera } from "@react-three/drei"
@@ -19,6 +20,7 @@ export const Route = createFileRoute('/')({
 })
 
 function App() {
+  const [autorotate, setautorotate] = useState(true)
   const [activeBarangay, setActiveBarangay] = useState("")
   const [targetPosition, setTargetPosition] = useState([0, 0, 0]) 
   const [hoveredBrgy, setHoveredBrgy] = useState<string | null>(null)
@@ -62,9 +64,22 @@ function App() {
       onHover={hoveredBrgy}
     >
       <div className="flex flex-col flex-1 justify-content-center h-screen bg-[#1D2129]">
-        <Header/>
+        <Header />
         <div className="fixed top-2 left-2 z-50">
           <SidebarTrigger />
+        </div>
+        <div className="fixed top-6 right-2 z-50">
+          <Button 
+            onClick={() => {
+              autorotate === true ? setautorotate(false) : setautorotate(true)}
+            } 
+            className="w-[20px] h-[30px] rounded-xl bg-blue-300">
+            <img src="./controller.svg" 
+                 alt="3d Rotate Icon"
+                 className='w-[5px]'
+                 
+            />
+          </Button>
         </div>
         <Canvas>
           <Suspense fallback={null}>
@@ -76,6 +91,7 @@ function App() {
               handleClick={handleClick}
               brgyRef={brgyRef}
               onHover={setHoveredBrgy}
+              rotate={autorotate}
             />
           </Suspense>
         </Canvas>
