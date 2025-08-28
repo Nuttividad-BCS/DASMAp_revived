@@ -3,6 +3,7 @@ import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact from '@vitejs/plugin-react'
 import viteTsConfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
+import svgr from "vite-plugin-svgr"
 
 import { wrapVinxiConfigWithSentry } from '@sentry/tanstackstart-react'
 
@@ -17,6 +18,7 @@ const config = defineConfig({
       customViteReactPlugin: true,
     }),
     viteReact(),
+    svgr(),
   ],
 })
 

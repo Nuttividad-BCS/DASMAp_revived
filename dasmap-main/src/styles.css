@@ -45,6 +45,20 @@ code {
     source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+svg path {
+  cursor: pointer;
+  transition: fill 0.2s;
+  pointer-events: all;
+}
+
+svg path:hover {
+  fill: red;
+}
+
+svg g, svg rect {
+  pointer-events: none;
+}
+
 :root {
   --radius: 0.65rem;
   --background: oklch(1 0 0);

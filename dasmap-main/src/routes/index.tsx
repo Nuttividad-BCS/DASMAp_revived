@@ -1,10 +1,11 @@
 "use client"
 import { Button } from '@/components/ui/button'
 import { createFileRoute } from '@tanstack/react-router'
-import { useState, useRef, Suspense} from "react"
+import { useState, useRef, Suspense } from "react"
 import { Environment, PerspectiveCamera } from "@react-three/drei"
 import { DasMap } from "@/components/Map_3D/Map"
-import { Canvas, useFrame, useThree} from '@react-three/fiber'
+import { DasMap2D } from "@/components/Map_2D/Map"
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import SideBar from "@/components/sidebarProvider"
 import { DashBoard } from '@/components/dashboard/drawer'
 import * as THREE from "three"
@@ -12,7 +13,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar'
 import Header from '../components/Header'
 
 interface RefStruct {
-  [key: string]: any 
+  [key: string]: any
 }
 
 export const Route = createFileRoute('/')({
@@ -22,9 +23,9 @@ export const Route = createFileRoute('/')({
 function App() {
   const [autorotate, setautorotate] = useState(true)
   const [activeBarangay, setActiveBarangay] = useState("")
-  const [targetPosition, setTargetPosition] = useState([0, 0, 0]) 
+  const [targetPosition, setTargetPosition] = useState([0, 0, 0])
   const [hoveredBrgy, setHoveredBrgy] = useState<string | null>(null)
-  const brgyRef = useRef<RefStruct>({}) 
+  const brgyRef = useRef<RefStruct>({})
 
   //Reset Cam on Click
   const resetCamera = () => {
@@ -32,7 +33,7 @@ function App() {
   }
 
   //Get Target Position of Clicked and center cam
-  const getPosition = (name:string) => {
+  const getPosition = (name: string) => {
     const mesh = brgyRef.current[name]
     const box = new THREE.Box3().setFromObject(mesh)
     const center = new THREE.Vector3()
@@ -41,11 +42,11 @@ function App() {
   }
 
   //Global Click Function
-  function handleClick(name:string) {
-    
+  function handleClick(name: string) {
+
     if (activeBarangay === name) {
-        setActiveBarangay("")
-        resetCamera()
+      setActiveBarangay("")
+      resetCamera()
     } else if (!activeBarangay) {
       setActiveBarangay(name)
       if (brgyRef.current && brgyRef.current[name]) {
@@ -55,10 +56,10 @@ function App() {
   }
 
   return (
-    
-    <SideBar 
+
+    <SideBar
       activeBarangay={activeBarangay}
-      targetPosition={[0,0,0]}
+      targetPosition={[0, 0, 0]}
       handleClick={handleClick}
       brgyRef={brgyRef}
       onHover={hoveredBrgy}
@@ -69,15 +70,16 @@ function App() {
           <SidebarTrigger />
         </div>
         <div className="fixed top-6 right-2 z-50">
-          <Button 
+          <Button
             onClick={() => {
-              autorotate === true ? setautorotate(false) : setautorotate(true)}
-            } 
+              autorotate === true ? setautorotate(false) : setautorotate(true)
+            }
+            }
             className="w-[20px] h-[30px] rounded-xl bg-blue-300">
-            <img src="./controller.svg" 
-                 alt="3d Rotate Icon"
-                 className='w-[5px]'
-                 
+            <img src="./controller.svg"
+              alt="3d Rotate Icon"
+              className='w-[5px]'
+
             />
           </Button>
         </div>
@@ -87,7 +89,7 @@ function App() {
             <PerspectiveCamera makeDefault position={[10, 15, 10]} />
             <DasMap
               activeBarangay={activeBarangay}
-              targetPosition={targetPosition as [number,number,number]}
+              targetPosition={targetPosition as [number, number, number]}
               handleClick={handleClick}
               brgyRef={brgyRef}
               onHover={setHoveredBrgy}
@@ -95,6 +97,14 @@ function App() {
             />
           </Suspense>
         </Canvas>
+        {/*<DasMap2D
+              activeBarangay={activeBarangay}
+              targetPosition={targetPosition as [number,number,number]}
+              handleClick={handleClick}
+              brgyRef={brgyRef}
+              onHover={setHoveredBrgy}
+              rotate={autorotate}
+        />*/}
         {hoveredBrgy && (
           <div className="
             absolute 
@@ -111,7 +121,7 @@ function App() {
           </div>
         )}
       </div>
-      <DashBoard handleClick={handleClick} activeBarangay={activeBarangay}/>
+      <DashBoard handleClick={handleClick} activeBarangay={activeBarangay} />
     </SideBar>
   )
 }
