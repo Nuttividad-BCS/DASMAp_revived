@@ -1,14 +1,16 @@
 import { MapActions } from "@/components/Map_3D/Map"
 import Map2D from "./svgs/Map_2D.svg?react"
 
+export interface MapActions2D {
+  handleClick : (name:string) => void
+  activeBarangay : string | null
+  onHover: (name: string | null) => void  
+}
 
-export const DasMap2D: React.FC<MapActions> = ({
+export const DasMap2D: React.FC<MapActions2D> = ({
     handleClick,
     activeBarangay,
-    targetPosition,
-    brgyRef,
-    onHover,
-    rotate
+    onHover
   }) => {
 
   return (
