@@ -101,6 +101,9 @@ importers:
       react-resizable-panels:
         specifier: ^3.0.4
         version: 3.0.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      react-svg-pan-zoom:
+        specifier: ^3.13.1
+        version: 3.13.1
       recharts:
         specifier: 2.15.4
         version: 2.15.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -4690,6 +4693,9 @@ packages:
       '@types/react':
         optional: true
 
+  react-svg-pan-zoom@3.13.1:
+    resolution: {integrity: sha512-mUGoXfo255c+T/FAdZ5Fr0paw9OpAz4owGku5bRjUOzSKUmqUJpuYbscuuzOIJWbmrJ0N/9mOWPE8JdjSYITbQ==}
+
   react-transition-group@4.4.5:
     resolution: {integrity: sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==}
     peerDependencies:
@@ -5181,6 +5187,9 @@ packages:
   tr46@5.1.1:
     resolution: {integrity: sha512-hdF5ZgjTqgAntKkklYw0R03MG2x/bSzTtkxmIRw/sTNV8YXsCJ1tfLAX23lhxhHJlEf3CRCOCGGWw3vI3GaSPw==}
     engines: {node: '>=18'}
+
+  transformation-matrix@2.16.1:
+    resolution: {integrity: sha512-tdtC3wxVEuzU7X/ydL131Q3JU5cPMEn37oqVLITjRDSDsnSHVFzW2JiCLfZLIQEgWzZHdSy3J6bZzvKEN24jGA==}
 
   triple-beam@1.4.1:
     resolution: {integrity: sha512-aZbgViZrg1QNcG+LULa7nhZpJTZSLm/mXnHXnbAbjmN5aSa0y7V+wvv6+4WaBtpISJzThKy+PIPxc1Nq1EJ9mg==}
@@ -10578,6 +10587,11 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.1.10
 
+  react-svg-pan-zoom@3.13.1:
+    dependencies:
+      prop-types: 15.8.1
+      transformation-matrix: 2.16.1
+
   react-transition-group@4.4.5(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:
       '@babel/runtime': 7.28.3
@@ -11089,6 +11103,8 @@ snapshots:
   tr46@5.1.1:
     dependencies:
       punycode: 2.3.1
+
+  transformation-matrix@2.16.1: {}
 
   triple-beam@1.4.1: {}
 
