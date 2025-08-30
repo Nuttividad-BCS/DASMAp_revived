@@ -50,12 +50,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body className="h-full w-full flex-1 flex-col">
           {children}      
           <Scripts />
-    </body>
-    </html>
-  )
-}
 
-{/*<TanstackDevtools
+      <TanstackDevtools
           config={{
             position: 'bottom-left',
           }}
@@ -66,4 +62,21 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             },
             TanStackQueryDevtools,
           ]}
-        /> */}
+        />
+    </body>
+    </html>
+  )
+}
+
+/*<TanstackDevtools
+          config={{
+            position: 'bottom-left',
+          }}
+          plugins={[
+            {
+              name: 'Tanstack Router',
+              render: <TanStackRouterDevtoolsPanel />,
+            },
+            TanStackQueryDevtools,
+          ]}
+        /> */
