@@ -19,11 +19,13 @@ import RadarRatio from "@/components/dashboard/stats/RMratio"
 interface DashProps {
   handleClick : (name:string) => void
   activeBarangay: string
+  mapOn : boolean
 }
 
 export const DashBoard: React.FC<DashProps> = ({
     handleClick,
-    activeBarangay
+    activeBarangay,
+    mapOn
 }) => {
     const [ open, setOpen ] = useState(false)
     
@@ -31,7 +33,9 @@ export const DashBoard: React.FC<DashProps> = ({
     useEffect(() => {
         if (activeBarangay == null || activeBarangay == "") {
             setOpen(false)
-        } else {setTimeout(() => {setOpen(true)},2000)}
+        } else {
+            setTimeout(() => {setOpen(true)}, mapOn ? 2000 : 500)
+        }
     }, [activeBarangay])
 
     return (

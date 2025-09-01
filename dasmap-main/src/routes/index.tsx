@@ -53,10 +53,14 @@ export default function App() {
   //Global Click Function
   function handleClick(name: string) {
 
-    if (activeBarangay === name) {
+    if (activeBarangay === name && mapOn) {
       setActiveBarangay("")
       resetCamera()
-    } else if (!activeBarangay) {
+    } else if (activeBarangay && !mapOn){
+      setActiveBarangay("")
+      setTimeout(() => setActiveBarangay(name), 0)
+    } 
+    else if (!activeBarangay) {
       setActiveBarangay(name)
       if (brgyRef.current && brgyRef.current[name]) {
         getPosition(name)
@@ -65,6 +69,8 @@ export default function App() {
   }
   
   useEffect(() => {
+    setActiveBarangay("")
+    resetCamera()
     const map_2d = document.getElementById("2d") as HTMLElement
     const map_3d = document.getElementById("3d") as HTMLElement
     if (mapOn) {
@@ -129,10 +135,11 @@ export default function App() {
           </Canvas>
         </div>
 
-        <div id="2d">
+        <div className="w-full" id="2d">
           <DasMap2D
             activeBarangay={activeBarangay}
             handleClick={handleClick}
+            onHover={setHoveredBrgy}
           />
         </div>
         {/*/maps/*/}
@@ -153,7 +160,7 @@ export default function App() {
           </div>
         )}
       </div>
-      <DashBoard handleClick={handleClick} activeBarangay={activeBarangay} />
+      <DashBoard handleClick={handleClick} activeBarangay={activeBarangay} mapOn={mapOn}/>
     </SideBar>
   )
 }
