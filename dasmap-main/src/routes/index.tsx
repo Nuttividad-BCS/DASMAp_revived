@@ -14,6 +14,7 @@ import * as THREE from "three"
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import Header from '../components/Header'
 import { Rotate3d, Box } from "lucide-react"
+import Terms from "@/components/terms"
 
 interface RefStruct {
   [key: string]: any
@@ -96,6 +97,9 @@ export default function App() {
         <Header />
         <div className="fixed top-2 left-2 z-50">
           <SidebarTrigger />
+        </div>
+        <div className="fixed top-[20%] left-[5%] lg:top-[15%] lg:left-[20%] z-50 w-[90vw] lg:w-[60vw]">
+          <Terms />
         </div>
         <div className="fixed top-6 right-2 z-50">
           <Button
