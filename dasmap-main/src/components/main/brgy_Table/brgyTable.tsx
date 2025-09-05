@@ -7,10 +7,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { useSidebar } from "../ui/sidebar"
+import { useSidebar } from "../../ui/sidebar"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { BARANGAYS } from "@/components/brgy_Table/barangays"
+import { BARANGAYS } from "@/components/main/brgy_Table/barangays"
 import { Input } from "@/components/ui/input"
 import { CallName } from "../sidebarMain"
 

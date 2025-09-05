@@ -1,5 +1,5 @@
 import { SidebarProvider } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/sidebarMain"
+import { AppSidebar } from "@/components/main/sidebarMain"
 import { MapActions } from "./Map_3D/Map"
 
 interface SideBarProps extends MapActions {

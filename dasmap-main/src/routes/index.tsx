@@ -5,16 +5,16 @@ import { Switch } from "@/components/ui/switch"
 import { createFileRoute } from '@tanstack/react-router'
 import { useState, useRef, Suspense, useEffect } from "react"
 import { Environment, PerspectiveCamera } from "@react-three/drei"
-import { DasMap } from "@/components/Map_3D/Map"
-import { DasMap2D } from "@/components/Map_2D/Map"
+import { DasMap } from "@/components/main/Map_3D/Map"
+import { DasMap2D } from "@/components/main/Map_2D/Map"
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import SideBar from "@/components/sidebarProvider"
-import { DashBoard } from '@/components/dashboard/drawer'
+import SideBar from "@/components/main/sidebarProvider"
+import { DashBoard } from '@/components/main/dashboard/drawer'
 import * as THREE from "three"
 import { SidebarTrigger } from '@/components/ui/sidebar'
-import Header from '../components/Header'
+import Header from '../components/main/Header'
 import { Rotate3d, Box } from "lucide-react"
-import Terms from "@/components/terms"
+import Terms from "@/components/main/terms"
 
 interface RefStruct {
   [key: string]: any
@@ -107,10 +107,9 @@ export default function App() {
               autorotate === true ? setautorotate(false) : setautorotate(true)
             }
             }
-            className="w-[40px] h-[40px] rounded-xl bg-red-600">
-            <div>
-              <Rotate3d />
-            </div>
+            className="w-[40px] h-[40px] rounded-xl bg-red-600"
+          >
+            <Rotate3d />
           </Button>
         </div>
         <div className="fixed top-25 right-2 md:top-8 md:right-15 lg:top-8 lg:right-15 z-50">
@@ -151,7 +150,8 @@ export default function App() {
         {hoveredBrgy && (
           <div className="
             absolute 
-            top-25 
+            top-35
+            lg:top-25
             right-4 
             bg-red-500 
             text-white 

@@ -9,8 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AdminpageRouteImport } from './routes/adminpage'
+import { Route as AdminlogRouteImport } from './routes/adminlog'
 import { Route as IndexRouteImport } from './routes/index'
 
+const AdminpageRoute = AdminpageRouteImport.update({
+  id: '/adminpage',
+  path: '/adminpage',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminlogRoute = AdminlogRouteImport.update({
+  id: '/adminlog',
+  path: '/adminlog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +31,50 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/adminlog': typeof AdminlogRoute
+  '/adminpage': typeof AdminpageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/adminlog': typeof AdminlogRoute
+  '/adminpage': typeof AdminpageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/adminlog': typeof AdminlogRoute
+  '/adminpage': typeof AdminpageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/adminlog' | '/adminpage'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/adminlog' | '/adminpage'
+  id: '__root__' | '/' | '/adminlog' | '/adminpage'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminlogRoute: typeof AdminlogRoute
+  AdminpageRoute: typeof AdminpageRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/adminpage': {
+      id: '/adminpage'
+      path: '/adminpage'
+      fullPath: '/adminpage'
+      preLoaderRoute: typeof AdminpageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/adminlog': {
+      id: '/adminlog'
+      path: '/adminlog'
+      fullPath: '/adminlog'
+      preLoaderRoute: typeof AdminlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +87,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminlogRoute: AdminlogRoute,
+  AdminpageRoute: AdminpageRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

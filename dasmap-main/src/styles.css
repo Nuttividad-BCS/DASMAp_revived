@@ -55,6 +55,16 @@ svg path:hover {
   fill: red;
 }
 
+.bg-grid {
+  --line: rgba(255,255,255,0.08);
+  --bg: #0d1117;
+  background:
+    linear-gradient(to right, var(--line) 1px, transparent 1px) 0 0/24px 24px,
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px) 0 0/24px 24px,
+    var(--bg);
+}
+
+
 svg g, svg rect {
   pointer-events: none;
 }

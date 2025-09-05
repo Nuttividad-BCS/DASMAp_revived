@@ -8,13 +8,13 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
-import { Button } from "../ui/button"
+import { Button } from "../../ui/button"
 import { useState, useEffect } from "react"
 import { motion, useDragControls } from "framer-motion"
 import React from "react"
-import RecovChart from "@/components/dashboard/stats/recovery"
-import MortalChart from "@/components/dashboard/stats/mortality"
-import RadarRatio from "@/components/dashboard/stats/RMratio"
+import RecovChart from "@/components/main/dashboard/stats/recovery"
+import MortalChart from "@/components/main/dashboard/stats/mortality"
+import RadarRatio from "@/components/main/dashboard/stats/RMratio"
 
 interface DashProps {
   handleClick : (name:string) => void

@@ -5,6 +5,7 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanstackDevtools } from '@tanstack/react-devtools'
+import { Toaster } from "@/components/ui/sonner"
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
@@ -48,6 +49,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="h-full w-full flex-1 flex-col">
+          <Toaster />
           {children}      
           <Scripts />
 

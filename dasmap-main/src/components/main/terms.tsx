@@ -13,6 +13,7 @@ import { Separator } from "@/components/ui/separator"
 import { Button } from '@/components/ui/button'
 import { Checkbox } from "@/components/ui/checkbox"
 import { useState, useEffect} from "react"
+import { toast } from "sonner"
 
 export default function Terms() {
     const [ open, setOpen ] = useState(true)
@@ -56,7 +57,9 @@ export default function Terms() {
                     </div>
                 </div>
                 <Button 
-                    onClick={() => checked ? setOpen(false) : setOpen(true)}
+                    onClick={() => {
+                        checked ? setOpen(false) : toast("Please Agree to Terms & Conditions")
+                    }}
                     className="w-[40%] justify-self-center"
                 >
                     Continue

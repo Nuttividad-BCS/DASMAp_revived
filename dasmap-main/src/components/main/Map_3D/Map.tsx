@@ -2,7 +2,7 @@ import { useGLTF, OrbitControls, useBoxProjectedEnv, Html } from '@react-three/d
 import { useRef, useEffect, useState } from 'react'
 import { useFrame, useThree, extend } from "@react-three/fiber"
 import * as THREE from 'three'
-import { BrgyMeshInfo } from "@/components/Map_3D/meshInfo"
+import { BrgyMeshInfo } from "@/components/main/Map_3D/meshInfo"
 
 type vectorFormat = [number,number,number]
 
