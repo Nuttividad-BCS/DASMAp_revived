@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Switch } from "@/components/ui/switch"
 import { createFileRoute } from '@tanstack/react-router'
 import { useState, useRef, Suspense, useEffect } from "react"
-import { Environment, PerspectiveCamera } from "@react-three/drei"
+import { Environment, PerspectiveCamera, AdaptiveDpr} from "@react-three/drei"
 import { DasMap } from "@/components/main/Map_3D/Map"
 import { DasMap2D } from "@/components/main/Map_2D/Map"
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/")({
 
 export default function App() {
   const [ mapOn, setMapOn ] = useState(false)
-  const [autorotate, setautorotate] = useState(true)
+  const [autorotate, setautorotate] = useState(false)
   const [activeBarangay, setActiveBarangay] = useState("")
   const [targetPosition, setTargetPosition] = useState([0, 0, 0])
   const [hoveredBrgy, setHoveredBrgy] = useState<string | null>(null)
@@ -69,20 +69,6 @@ export default function App() {
     }
   }
   
-  useEffect(() => {
-    setActiveBarangay("")
-    resetCamera()
-    const map_2d = document.getElementById("2d") as HTMLElement
-    const map_3d = document.getElementById("3d") as HTMLElement
-    if (mapOn) {
-      map_3d.style.display = "block"
-      map_2d.style.display = "none"
-    } else {
-          map_3d.style.display = "none"
-      map_2d.style.display = "block"
-    } 
-  },[mapOn])
-  
 
   return (
 
@@ -93,7 +79,7 @@ export default function App() {
       brgyRef={brgyRef}
       onHover={hoveredBrgy}
     >
-      <div className="flex flex-col flex-1 justify-content-center h-screen bg-[#1D2129]">
+      <div className="flex flex-col flex-1 justify-content-center min-h-screen bg-[#1D2129]">
         <Header />
         <div className="fixed top-2 left-2 z-50">
           <SidebarTrigger />
@@ -121,30 +107,38 @@ export default function App() {
         </div>
 
         {/*/maps/*/} 
-        <div className="h-screen w-full" id="3d">
-          <Canvas>
-            <Suspense fallback={null}>
-              <Environment preset="sunset" />
-              <PerspectiveCamera makeDefault position={[10, 15, 10]} />
-              <DasMap
-                activeBarangay={activeBarangay}
-                targetPosition={targetPosition as [number, number, number]}
-                handleClick={handleClick}
-                brgyRef={brgyRef}
-                onHover={setHoveredBrgy}
-                rotate={autorotate}
-              />
-            </Suspense>
-          </Canvas>
-        </div>
+        {mapOn && (
+          <div className="h-screen w-full">
+            <Canvas frameloop="demand" dpr={[0.6,1]}>
+              <AdaptiveDpr pixelated />
+              <ambientLight intensity={0.7} />
+              <directionalLight position={[20, 5, 10]} intensity={0.8} />
+              <Suspense fallback={null}>
+                <PerspectiveCamera makeDefault position={[10, 15, 10]} />
+                <DasMap
+                  activeBarangay={activeBarangay}
+                  targetPosition={targetPosition as [number, number, number]}
+                  handleClick={handleClick}
+                  brgyRef={brgyRef}
+                  onHover={setHoveredBrgy}
+                  rotate={autorotate}
+                />
+                
+              </Suspense>
+            </Canvas>
+          </div>
+        )}
 
-        <div className="w-full" id="2d">
+        {!mapOn && (
+          <div className="w-full">
           <DasMap2D
             activeBarangay={activeBarangay}
             handleClick={handleClick}
             onHover={setHoveredBrgy}
           />
         </div>
+        )}
+        
         {/*/maps/*/}
 
         {hoveredBrgy && (

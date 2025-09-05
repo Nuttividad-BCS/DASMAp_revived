@@ -1,5 +1,5 @@
 import { useGLTF, OrbitControls, useBoxProjectedEnv, Html } from '@react-three/drei'
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, Suspense } from 'react'
 import { useFrame, useThree, extend } from "@react-three/fiber"
 import * as THREE from 'three'
 import { BrgyMeshInfo } from "@/components/main/Map_3D/meshInfo"
@@ -22,7 +22,7 @@ export interface MapActions {
 }
 
 function MoveCam({ target, active, targetPosition }: MoveCamProps) {
-  const { camera } = useThree()
+  const { camera, invalidate } = useThree()
   const startPos = useRef(new THREE.Vector3())
   const controlPos = useRef(new THREE.Vector3())
   const endPos = useRef(new THREE.Vector3())
@@ -30,6 +30,7 @@ function MoveCam({ target, active, targetPosition }: MoveCamProps) {
   const theta = useRef(0)
 
   useEffect(() => {
+    invalidate()
     if (active && target) {
       // where we start (camera's current position)
       startPos.current.copy(camera.position)
@@ -86,9 +87,9 @@ export const DasMap: React.FC<MapActions> = ({
     rotate
   }) => {
 
-  const { nodes, materials } = useGLTF('./DASMA.glb')
+  const { nodes, materials } = useGLTF('./DASMA-draco.glb')
   const BrgyInfo = BrgyMeshInfo ?? []
-
+  const mat = materials['SVGMat.032']
   return (
       <group position={[-1, 0, -2]} dispose={null}>
         {BrgyInfo.map((brg) => (
@@ -98,7 +99,7 @@ export const DasMap: React.FC<MapActions> = ({
                 key={brg.name}
                 ref={(e) => {if (e) brgyRef.current[brg.name] = e}}
                 geometry={(nodes[brg.name] as THREE.Mesh).geometry}
-                material={materials['SVGMat.032']}
+                material={mat}
                 position={(brg.position as vectorFormat) ?? [0,0,0]}  
                 rotation={(brg.rotation as vectorFormat) ?? [0,0,0]}  
                 scale={(brg.scale as vectorFormat) ?? 19.644} 
@@ -111,7 +112,7 @@ export const DasMap: React.FC<MapActions> = ({
               </mesh>
           ))
         }
-
+        <Suspense fallback={null}>
         <OrbitControls
           minPolarAngle={0}
           maxPolarAngle={Math.PI / 3}
@@ -123,6 +124,7 @@ export const DasMap: React.FC<MapActions> = ({
           maxDistance={60}
           target={new THREE.Vector3(...targetPosition)}
         />
+        </Suspense>
         <MoveCam 
           target={activeBarangay ? brgyRef.current[activeBarangay] : null} 
           active={activeBarangay} 
@@ -132,4 +134,4 @@ export const DasMap: React.FC<MapActions> = ({
   )
 }
 
-useGLTF.preload('./DASMA.glb')
+useGLTF.preload('./DASMA-draco.glb')
