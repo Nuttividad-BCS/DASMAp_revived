@@ -15,6 +15,8 @@ import { SidebarTrigger } from '@/components/ui/sidebar'
 import Header from '../components/main/Header'
 import { Rotate3d, Box } from "lucide-react"
 import Terms from "@/components/main/terms"
+import GetData from "@/components/main/api/main"
+
 
 interface RefStruct {
   [key: string]: any
@@ -53,7 +55,7 @@ export default function App() {
 
   //Global Click Function
   function handleClick(name: string) {
-
+    GetData()
     if (activeBarangay === name && mapOn) {
       setActiveBarangay("")
       resetCamera()
