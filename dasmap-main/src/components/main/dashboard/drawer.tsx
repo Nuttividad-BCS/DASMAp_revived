@@ -15,6 +15,9 @@ import React from "react"
 import RecovChart from "@/components/main/dashboard/stats/recovery"
 import MortalChart from "@/components/main/dashboard/stats/mortality"
 import RadarRatio from "@/components/main/dashboard/stats/RMratio"
+import { Label } from "recharts"
+import { BrgyMeshInfo } from "../Map_3D/meshInfo.withCoords"
+
 
 interface DashProps {
   handleClick : (name:string) => void
@@ -28,15 +31,28 @@ export const DashBoard: React.FC<DashProps> = ({
     mapOn
 }) => {
     const [ open, setOpen ] = useState(false)
-    
+    const [ popu, setPopu ] = useState(0)
+    const [ pc, setPc] = useState("")
+    const [ coord, setCoord ] = useState([0,0])
 
     useEffect(() => {
         if (activeBarangay == null || activeBarangay == "") {
             setOpen(false)
+            setPopu(0)
+            setPc("")
+            setCoord([0,0])
         } else {
-            setTimeout(() => {setOpen(true)}, mapOn ? 2000 : 500)
+            
+            const delay = setTimeout(() => {setOpen(true)}, mapOn ? 2000 : 1000)
+            const current = BrgyMeshInfo.find(e => e.name === activeBarangay)
+            if (current && current.coordinates) {
+                setPopu(current?.population2020)
+                setPc(current?.pct_of_city)
+                setCoord(current?.coordinates)
+            }
+            return () => clearTimeout(delay)
         }
-    }, [activeBarangay])
+    }, [activeBarangay, mapOn])
 
     return (
         <Drawer open={open} preventScrollRestoration={true} onOpenChange={setOpen}>
@@ -66,10 +82,24 @@ export const DashBoard: React.FC<DashProps> = ({
                 gap-8
                 p-5">
                     <DrawerHeader className="grid col-span-1 lg:col-span-6 grid-cols-1 lg:grid-cols-4 justify-self-center">
-                        <DrawerTitle className="col-span-1 lg:col-span-4 text-white">
-                            {activeBarangay.split("_").join(" ")}
-                        </DrawerTitle>
-                        <DrawerDescription className="col-span-1 lg:col-span-4 lg:justify-self-start">Dashboard Overview and Model Predictions</DrawerDescription>
+                        <div className="col-span-1 lg:col-span-4 text-white grid lg:grid-cols-10 text-xl gap-5 lg:gap-0">
+                            <DrawerTitle className="col-span-1 lg:col-span-2 text-white ">
+                                Barangay Name: {activeBarangay.split("_").join(" ")}
+                            </DrawerTitle>
+                            <DrawerTitle className="col-span-1 lg:col-span-2 text-white ">
+                                Population: {popu}
+                            </DrawerTitle>
+                            <DrawerTitle className="col-span-1 lg:col-span-2 text-white ">
+                                % to the City: {pc}
+                            </DrawerTitle>
+                            <DrawerTitle className="col-span-1 lg:col-span-2 text-white ">
+                                Longitude: {coord[0]}
+                            </DrawerTitle>
+                            <DrawerTitle className="col-span-1 lg:col-span-2 text-white ">
+                                Latitude: {coord[1]}
+                            </DrawerTitle>
+                        </div>
+                        <DrawerDescription className="col-span-1 lg:col-span-8 lg:justify-self-center">Dashboard Overview and Model Predictions</DrawerDescription>
                     </DrawerHeader>
                     <RecovChart />
                     <MortalChart />

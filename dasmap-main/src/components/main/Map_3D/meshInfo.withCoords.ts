@@ -7,7 +7,7 @@ export const BrgyMeshInfo = [
       -0.04947662353515625
     ],
     population2020: 6314,  
-    pct_of_city: "0.90%"
+    pct_of_city: "0.90%",
   coordinates: [14.320323, 120.964587],
   },
   {
@@ -18,7 +18,7 @@ export const BrgyMeshInfo = [
       -2.852691650390625
     ],
     population2020: 17287, 
-    pct_of_city: "2.46%"
+    pct_of_city: "2.46%",
   coordinates: [14.326913, 120.960375],
   },
   {
@@ -29,7 +29,7 @@ export const BrgyMeshInfo = [
       -0.7355809211730957
     ],
     population2020: 6025,  
-    pct_of_city: "0.86%"
+    pct_of_city: "0.86%",
   coordinates: [14.323925, 120.963043],
   },
   {
@@ -40,7 +40,7 @@ export const BrgyMeshInfo = [
       -3.5255982875823975
     ],
     population2020: 10921, 
-    pct_of_city: "1.55%"
+    pct_of_city: "1.55%",
   coordinates: [14.326140, 120.967034],
   },
   {
@@ -51,7 +51,7 @@ export const BrgyMeshInfo = [
       -3.0171291828155518
     ],
     population2020: 11902, 
-    pct_of_city: "1.69%"
+    pct_of_city: "1.69%",
   coordinates: [14.329418, 120.949167],
   },
   {
@@ -62,7 +62,7 @@ export const BrgyMeshInfo = [
       -2.701456069946289
     ],
     population2020: 7969, 
-    pct_of_city: "1.13%"
+    pct_of_city: "1.13%",
   coordinates: [14.334002, 120.958476],
   },
   {
@@ -73,7 +73,7 @@ export const BrgyMeshInfo = [
       0.7002456188201904
     ],
     population2020: 8002,  
-    pct_of_city: "1.14%"
+    pct_of_city: "1.14%",
   coordinates: null,
   },
   {
@@ -84,7 +84,7 @@ export const BrgyMeshInfo = [
       1.0171910524368286
     ],
     population2020: 2796,  
-    pct_of_city: "0.40%"
+    pct_of_city: "0.40%",
   coordinates: null,
   },
   {
@@ -95,7 +95,7 @@ export const BrgyMeshInfo = [
       -0.7441409826278687
     ],
     population2020: 6782,  
-    pct_of_city: "0.96%"
+    pct_of_city: "0.96%",
   coordinates: [14.318494, 120.961321],
   },
   {
@@ -106,7 +106,7 @@ export const BrgyMeshInfo = [
       0.24587135016918182
     ],
     population2020: 6782,  
-    pct_of_city: "0.96%"
+    pct_of_city: "0.96%",
   coordinates: [14.318494, 120.961321],
   },
   {
@@ -117,7 +117,7 @@ export const BrgyMeshInfo = [
       0.839776873588562
     ],
     population2020: 4305,  
-    pct_of_city: "0.61%"
+    pct_of_city: "0.61%",
   coordinates: [14.315494, 120.964278],
   },
   {
@@ -128,7 +128,7 @@ export const BrgyMeshInfo = [
       1.431746482849121
     ],
     population2020: 3684,  
-    pct_of_city: "0.52%"
+    pct_of_city: "0.52%",
   coordinates: [14.312529, 120.965378],
   },
   {
@@ -139,7 +139,7 @@ export const BrgyMeshInfo = [
       -2.359473705291748
     ],
     population2020: 9306,  
-    pct_of_city: "1.32%"
+    pct_of_city: "1.32%",
   coordinates: [14.332008, 120.957824],
   },
   {
@@ -150,7 +150,7 @@ export const BrgyMeshInfo = [
       4.218836784362793
     ],
     population2020: 26939, 
-    pct_of_city: "3.83%"
+    pct_of_city: "3.83%",
   coordinates: [14.293724, 120.936684],
   },
   {
@@ -161,8 +161,8 @@ export const BrgyMeshInfo = [
       -0.20574134588241577
     ],
     population2020: 33651, 
-    pct_of_city: "4.79%"
-  coordinates: [14.317667, 120.927990],
+    pct_of_city: "4.79%",
+    coordinates: [14.317667, 120.927990],
   },
   {
     name: "Luzviminda_I",
@@ -172,7 +172,7 @@ export const BrgyMeshInfo = [
       0.7441259026527405
     ],
     population2020: 3565,  
-    pct_of_city: "0.51%"
+    pct_of_city: "0.51%",
   coordinates: [14.315261, 120.966638],
   },
   {
@@ -183,7 +183,7 @@ export const BrgyMeshInfo = [
       1.8342655897140503
     ],
     population2020: 4868,  
-    pct_of_city: "0.69%"
+    pct_of_city: "0.69%",
   coordinates: [14.310371, 120.969227],
   },
   {
@@ -194,7 +194,7 @@ export const BrgyMeshInfo = [
       4.573016166687012
     ],
     population2020: 10125, 
-    pct_of_city: "1.44%"
+    pct_of_city: "1.44%",
   coordinates: [14.319503, 120.985399],
   },
   {
@@ -205,7 +205,7 @@ export const BrgyMeshInfo = [
       1.9489299058914185
     ],
     population2020: 20804, 
-    pct_of_city: "2.96%"
+    pct_of_city: "2.96%",
   coordinates: [14.302691, 120.993435],
   },
   {
@@ -216,7 +216,7 @@ export const BrgyMeshInfo = [
       -0.8747650384902954
     ],
     population2020: 72945, 
-    pct_of_city: "10.37%"
+    pct_of_city: "10.37%",
   coordinates: null,
   },
   {
@@ -227,7 +227,7 @@ export const BrgyMeshInfo = [
       -6.095069885253906
     ],
     population2020: 17329, 
-    pct_of_city: "2.46%"
+    pct_of_city: "2.46%",
   coordinates: [14.347663, 120.924477],
   },
   {
@@ -238,7 +238,7 @@ export const BrgyMeshInfo = [
       -7.783471584320068
     ],
     population2020: 78778, 
-    pct_of_city: "11.20%"
+    pct_of_city: "11.20%",
   coordinates: [14.342477, 120.986478],
   },
   {
@@ -249,7 +249,7 @@ export const BrgyMeshInfo = [
       -7.265288352966309
     ],
     population2020: 5158,  
-    pct_of_city: "0.73%"
+    pct_of_city: "0.73%",
   coordinates: [14.350232, 120.937867],
   },
   {
@@ -260,7 +260,7 @@ export const BrgyMeshInfo = [
       -5.236516952514648
     ],
     population2020: 12337, 
-    pct_of_city: "1.75%"
+    pct_of_city: "1.75%",
   coordinates: [14.350232, 120.937867],
   },
   {
@@ -271,7 +271,7 @@ export const BrgyMeshInfo = [
       -6.872682571411133
     ],
     population2020: 15396, 
-    pct_of_city: "2.19%"
+    pct_of_city: "2.19%",
   coordinates: [14.343762, 120.945253],
   },
   {
@@ -282,7 +282,7 @@ export const BrgyMeshInfo = [
       -7.807483673095703
     ],
     population2020: 11819, 
-    pct_of_city: "1.68%"
+    pct_of_city: "1.68%",
   coordinates: [14.345481, 120.937733],
   },
   {
@@ -293,7 +293,7 @@ export const BrgyMeshInfo = [
       3.305236577987671
     ],
     population2020: 7662,  
-    pct_of_city: "1.09%"
+    pct_of_city: "1.09%",
   coordinates: [14.296817, 120.955230],
   },
   {
@@ -304,7 +304,7 @@ export const BrgyMeshInfo = [
       5.381503105163574
     ],
     population2020: 18225, 
-    pct_of_city: "2.59%"
+    pct_of_city: "2.59%",
   coordinates: [14.287514, 120.960121],
   },
   {
@@ -315,7 +315,7 @@ export const BrgyMeshInfo = [
       5.02995491027832
     ],
     population2020: 18225, 
-    pct_of_city: "2.59%"
+    pct_of_city: "2.59%",
   coordinates: [14.287514, 120.960121],
   },
   {
@@ -326,7 +326,7 @@ export const BrgyMeshInfo = [
       5.413764953613281
     ],
     population2020: 13807, 
-    pct_of_city: "1.96%"
+    pct_of_city: "1.96%",
   coordinates: null,
   },
   {
@@ -337,7 +337,7 @@ export const BrgyMeshInfo = [
       1.3731526136398315
     ],
     population2020: 41678, 
-    pct_of_city: "5.93%"
+    pct_of_city: "5.93%",
   coordinates: [14.269462, 120.968143],
   },
   {
@@ -348,7 +348,7 @@ export const BrgyMeshInfo = [
       6.801458358764648
     ],
     population2020: 3252,  
-    pct_of_city: "0.46%"
+    pct_of_city: "0.46%",
   coordinates: [14.287514, 120.960121],
   },
   {
@@ -359,7 +359,7 @@ export const BrgyMeshInfo = [
       1.484932541847229
     ],
     population2020: 11971, 
-    pct_of_city: "1.70%"
+    pct_of_city: "1.70%",
   coordinates: [14.313260, 120.946669],
   },
   {
@@ -370,7 +370,7 @@ export const BrgyMeshInfo = [
       -0.13793744146823883
     ],
     population2020: 11692, 
-    pct_of_city: "1.66%"
+    pct_of_city: "1.66%",
   coordinates: [14.313260, 120.946669],
   },
   {
@@ -381,7 +381,7 @@ export const BrgyMeshInfo = [
       -0.2860976755619049
     ],
     population2020: 10178, 
-    pct_of_city: "1.45%"
+    pct_of_city: "1.45%",
   coordinates: [14.393531, 120.852771],
   },
   {
@@ -392,7 +392,7 @@ export const BrgyMeshInfo = [
       -0.3154468238353729
     ],
     population2020: 4259,  
-    pct_of_city: "0.61%"
+    pct_of_city: "0.61%",
   coordinates: [14.320495, 120.969628],
   },
   {
@@ -403,7 +403,7 @@ export const BrgyMeshInfo = [
       0.023648977279663086
     ],
     population2020: 3405,  
-    pct_of_city: "0.48%"
+    pct_of_city: "0.48%",
   coordinates: [14.322048, 120.967962],
   },
   {
@@ -414,7 +414,7 @@ export const BrgyMeshInfo = [
       0.19066762924194336
     ],
     population2020: 3407, 
-    pct_of_city: "0.48%"
+    pct_of_city: "0.48%",
   coordinates: [14.318809, 120.957159],
   },
   {
@@ -425,7 +425,7 @@ export const BrgyMeshInfo = [
       0.6817429661750793
     ],
     population2020: 3062, 
-    pct_of_city: "0.44%"
+    pct_of_city: "0.44%",
   coordinates: [14.317166, 120.957194],
   },
   {
@@ -436,7 +436,7 @@ export const BrgyMeshInfo = [
       -3.716440200805664
     ],
     population2020: 6741,  
-    pct_of_city: "0.96%"
+    pct_of_city: "0.96%",
   coordinates: [14.339528, 120.953426],
   },
   {
@@ -447,7 +447,7 @@ export const BrgyMeshInfo = [
       -0.224773108959198
     ],
     population2020: 3099,  
-    pct_of_city: "0.44%"
+    pct_of_city: "0.44%",
   coordinates: [14.320490, 120.966289],
   },
   {
@@ -458,7 +458,7 @@ export const BrgyMeshInfo = [
       0.1127309799194336
     ],
     population2020: 3363,  
-    pct_of_city: "0.48%"
+    pct_of_city: "0.48%",
   coordinates: [14.320490, 120.966289],
   },
   {
@@ -469,7 +469,7 @@ export const BrgyMeshInfo = [
       -0.25543466210365295
     ],
     population2020: 3363,  
-    pct_of_city: "0.48%"
+    pct_of_city: "0.48%",
   coordinates: [14.320490, 120.966289],
   },
   {
@@ -480,7 +480,7 @@ export const BrgyMeshInfo = [
       -4.325033664703369
     ],
     population2020: 4834, 
-    pct_of_city: "0.69%"
+    pct_of_city: "0.69%",
   coordinates: null,
   },
   {
@@ -491,7 +491,7 @@ export const BrgyMeshInfo = [
       -3.9607810974121094
     ],
     population2020: 2463, 
-    pct_of_city: "0.35%"
+    pct_of_city: "0.35%",
   coordinates: null,
   },
   {
@@ -502,7 +502,7 @@ export const BrgyMeshInfo = [
       -3.7378244400024414
     ],
     population2020: 11925, 
-    pct_of_city: "1.70%"
+    pct_of_city: "1.70%",
   coordinates: [14.335190, 120.930542],
   },
   {
@@ -513,7 +513,7 @@ export const BrgyMeshInfo = [
       -3.5850212574005127
     ],
     population2020: 3667,  
-    pct_of_city: "0.52%"
+    pct_of_city: "0.52%",
   coordinates: [14.339769, 120.951060],
   },
   {
@@ -524,7 +524,7 @@ export const BrgyMeshInfo = [
       1.8478724956512451
     ],
     population2020: 3311,  
-    pct_of_city: "0.47%"
+    pct_of_city: "0.47%",
   coordinates: null,
   },
   {
@@ -535,7 +535,7 @@ export const BrgyMeshInfo = [
       1.7375389337539673
     ],
     population2020: 4275,  
-    pct_of_city: "0.61%"
+    pct_of_city: "0.61%",
   coordinates: [14.311064, 120.957044],
   },
   {
@@ -546,7 +546,7 @@ export const BrgyMeshInfo = [
       1.7637938261032104
     ],
     population2020: 3963,  
-    pct_of_city: "0.56%"
+    pct_of_city: "0.56%",
   coordinates: [14.310930, 120.963362],
   },
   {
@@ -557,7 +557,7 @@ export const BrgyMeshInfo = [
       1.080206274986267
     ],
     population2020: 4336,  
-    pct_of_city: "0.62%"
+    pct_of_city: "0.62%",
   coordinates: [14.313779, 120.962634],
   },
   {
@@ -568,7 +568,7 @@ export const BrgyMeshInfo = [
       -2.828218460083008
     ],
     population2020: 2822,  
-    pct_of_city: "0.40%"
+    pct_of_city: "0.40%",
   coordinates: [14.334670, 120.952878],
   },
   {
@@ -579,7 +579,7 @@ export const BrgyMeshInfo = [
       -2.697432279586792
     ],
     population2020: 2581,  
-    pct_of_city: "0.37%"
+    pct_of_city: "0.37%",
   coordinates: [14.336063, 120.950389],
   },
   {
@@ -590,7 +590,7 @@ export const BrgyMeshInfo = [
       0.6859686374664307
     ],
     population2020: 4950,  
-    pct_of_city: "0.70%"
+    pct_of_city: "0.70%",
   coordinates: [14.316987, 120.968825],
   },
   {
@@ -601,7 +601,7 @@ export const BrgyMeshInfo = [
       -2.9782941341400146
     ],
     population2020: 4118,  
-    pct_of_city: "0.59%"
+    pct_of_city: "0.59%",
   coordinates: [14.336954, 120.947835],
   },
   {
@@ -612,7 +612,7 @@ export const BrgyMeshInfo = [
       -3.12976336479187
     ],
     population2020: 2272,  
-    pct_of_city: "0.32%"
+    pct_of_city: "0.32%",
   coordinates: [14.338045, 120.949508],
   },
   {
@@ -623,7 +623,7 @@ export const BrgyMeshInfo = [
       1.1121846437454224
     ],
     population2020: 2071,  
-    pct_of_city: "0.29%"
+    pct_of_city: "0.29%",
   coordinates: null,
   },
   {
@@ -634,7 +634,7 @@ export const BrgyMeshInfo = [
       0.770440936088562
     ],
     population2020: 4576,  
-    pct_of_city: "0.65%"
+    pct_of_city: "0.65%",
   coordinates: null,
   },
   {
@@ -645,7 +645,7 @@ export const BrgyMeshInfo = [
       -0.5139164328575134
     ],
     population2020: 2855,  
-    pct_of_city: "0.41%"
+    pct_of_city: "0.41%",
   coordinates: [14.323588, 120.968222],
   },
   {
@@ -656,7 +656,7 @@ export const BrgyMeshInfo = [
       -0.11543773859739304
     ],
     population2020: 6242,  
-    pct_of_city: "0.89%"
+    pct_of_city: "0.89%",
   coordinates: [14.319033, 120.971470],
   },
   {
@@ -667,7 +667,7 @@ export const BrgyMeshInfo = [
       -0.5496552586555481
     ],
     population2020: 3307,  
-    pct_of_city: "0.47%"
+    pct_of_city: "0.47%",
   coordinates: [14.322986, 120.969972],
   },
   {
@@ -678,7 +678,7 @@ export const BrgyMeshInfo = [
       -0.6369884610176086
     ],
     population2020: 3505,  
-    pct_of_city: "0.50%"
+    pct_of_city: "0.50%",
   coordinates: [14.324362, 120.966780],
   },
   {
@@ -689,7 +689,7 @@ export const BrgyMeshInfo = [
       1.3604530096054077
     ],
     population2020: 5112,  
-    pct_of_city: "0.73%"
+    pct_of_city: "0.73%",
   coordinates: [14.313479, 120.957885],
   },
   {
@@ -700,7 +700,7 @@ export const BrgyMeshInfo = [
       1.0180633068084717
     ],
     population2020: 2138,  
-    pct_of_city: "0.30%"
+    pct_of_city: "0.30%",
   coordinates: [14.315521, 120.956853],
   },
   {
@@ -711,7 +711,7 @@ export const BrgyMeshInfo = [
       -3.2038798332214355
     ],
     population2020: 5534,  
-    pct_of_city: "0.79%"
+    pct_of_city: "0.79%",
   coordinates: [14.336428, 120.953393],
   },
   {
@@ -722,7 +722,7 @@ export const BrgyMeshInfo = [
       -0.6337217688560486
     ],
     population2020: 5068,  
-    pct_of_city: "0.72%"
+    pct_of_city: "0.72%",
   coordinates: [14.322010, 120.956350],
   },
   {
@@ -733,7 +733,7 @@ export const BrgyMeshInfo = [
       -3.767050266265869
     ],
     population2020: 4551,  
-    pct_of_city: "0.65%"
+    pct_of_city: "0.65%",
   coordinates: [14.340100, 120.955818],
   },
   {
@@ -744,7 +744,7 @@ export const BrgyMeshInfo = [
       -3.044903516769409
     ],
     population2020: 4583,  
-    pct_of_city: "0.65%"
+    pct_of_city: "0.65%",
   coordinates: null,
   },
   {
@@ -755,7 +755,7 @@ export const BrgyMeshInfo = [
       -4.125847339630127
     ],
     population2020: 2859,  
-    pct_of_city: "0.41%"
+    pct_of_city: "0.41%",
   coordinates: [14.342876, 120.952745],
   },
   {
@@ -766,7 +766,7 @@ export const BrgyMeshInfo = [
       -4.127326011657715
     ],
     population2020: 2737,  
-    pct_of_city: "0.39%"
+    pct_of_city: "0.39%",
   coordinates: [14.343195, 120.955075],
   },
   {
@@ -778,7 +778,7 @@ export const BrgyMeshInfo = [
     ],
     scale: [32.013, 19.468, 32.013],
     population2020: 2287,  
-    pct_of_city: "0.33%"
+    pct_of_city: "0.33%",
   coordinates: [14.339078, 120.947759],
   },
   {
@@ -790,7 +790,7 @@ export const BrgyMeshInfo = [
     ],
     scale: [34.922, 20.005, 34.922],
     population2020: 2471,  
-    pct_of_city: "0.35%"
+    pct_of_city: "0.35%",
   coordinates: [14.340528, 120.947283],
   },
   {
@@ -802,7 +802,7 @@ export const BrgyMeshInfo = [
     ],
     scale: [51.524, 19.433, 51.524],
     population2020: 13838, 
-    pct_of_city: "1.97%"
+    pct_of_city: "1.97%",
   coordinates: [14.316647, 120.976858],
   },
   {
@@ -813,7 +813,7 @@ export const BrgyMeshInfo = [
       -1.8473016023635864
     ],
     population2020: 4219,  
-    pct_of_city: "0.60%"
+    pct_of_city: "0.60%",
   coordinates: [14.335618, 120.938214],
   },
   {
@@ -826,7 +826,7 @@ export const BrgyMeshInfo = [
     rotation: [Math.PI, -0.052, Math.PI],
     scale: [-45.186, -20.06, -45.186],
     population2020: 5595,  
-    pct_of_city: "0.80%"
+    pct_of_city: "0.80%",
   coordinates: [14.335618, 120.938214],
   },
   {
@@ -837,7 +837,7 @@ export const BrgyMeshInfo = [
       -1.3734118938446045
     ],
     population2020: 1677,  
-    pct_of_city: "0.24%"
+    pct_of_city: "0.24%",
   coordinates: [14.335618, 120.938214],
   },
   {
@@ -848,7 +848,7 @@ export const BrgyMeshInfo = [
       -1.2151403427124023
     ],
     population2020: 3821,  
-    pct_of_city: "0.54%"
+    pct_of_city: "0.54%",
   coordinates: [14.446953, 120.953502],
   },
   {
@@ -860,7 +860,7 @@ export const BrgyMeshInfo = [
     ],
     scale: [43.436, 19.131, 43.436],
     population2020: 3770,  
-    pct_of_city: "0.54%"
+    pct_of_city: "0.54%",
   coordinates: [14.335618, 120.938214],
   }
 ]

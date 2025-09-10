@@ -41,7 +41,9 @@ export default function App() {
 
   //Switch Match Mode
   const switchMap = (checked : boolean) => {
+      resetCamera()
       setMapOn(checked)
+      setActiveBarangay("")
   }
 
   //Get Target Position of Clicked and center cam
