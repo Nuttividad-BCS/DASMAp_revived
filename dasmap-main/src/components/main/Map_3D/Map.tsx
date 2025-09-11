@@ -1,4 +1,4 @@
-import { useGLTF, OrbitControls, useBoxProjectedEnv, Html } from '@react-three/drei'
+import { useGLTF, OrbitControls, useBoxProjectedEnv, Html, Wireframe, gridHe} from '@react-three/drei'
 import { useRef, useEffect, useState, Suspense } from 'react'
 import { useFrame, useThree, extend } from "@react-three/fiber"
 import * as THREE from 'three'
@@ -87,7 +87,7 @@ export const DasMap: React.FC<MapActions> = ({
     rotate
   }) => {
 
-  const { nodes, materials } = useGLTF('./DASMA-draco.glb')
+  const { nodes, materials } = useGLTF('./DASMA3.glb')
   const BrgyInfo = BrgyMeshInfo ?? []
   const mat = materials['SVGMat.032']
   return (
@@ -112,6 +112,7 @@ export const DasMap: React.FC<MapActions> = ({
               </mesh>
           ))
         }
+          
         <Suspense fallback={null}>
         <OrbitControls
           minPolarAngle={0}
@@ -134,4 +135,4 @@ export const DasMap: React.FC<MapActions> = ({
   )
 }
 
-useGLTF.preload('./DASMA-draco.glb')
+useGLTF.preload('./DASMA3.glb')

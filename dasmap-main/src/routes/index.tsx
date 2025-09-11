@@ -125,7 +125,7 @@ export default function App() {
                   onHover={setHoveredBrgy}
                   rotate={autorotate}
                 />
-                
+                <gridHelper args={[1000, 100, "white", "gray"]} />
               </Suspense>
             </Canvas>
           </div>
