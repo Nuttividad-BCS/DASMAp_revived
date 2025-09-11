@@ -45,6 +45,15 @@ export default function App() {
       setActiveBarangay("")
   }
 
+  const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const handleHover = (name: string | null) => {
+    if (hoverTimeout.current) clearTimeout(hoverTimeout.current)
+    hoverTimeout.current = setTimeout(() => {
+      setHoveredBrgy(name)
+    }, 30)
+  };
+
   //Get Target Position of Clicked and center cam
   const getPosition = (name: string) => {
     const mesh = brgyRef.current[name]
@@ -111,7 +120,7 @@ export default function App() {
         {/*/maps/*/} 
         {mapOn && (
           <div className="h-screen w-full">
-            <Canvas frameloop="demand" dpr={[0.6,1]}>
+            <Canvas frameloop="always" dpr={[0.6,1]}>
               <AdaptiveDpr pixelated />
               <ambientLight intensity={0.7} />
               <directionalLight position={[20, 5, 10]} intensity={0.8} />
@@ -121,6 +130,7 @@ export default function App() {
                   activeBarangay={activeBarangay}
                   targetPosition={targetPosition as [number, number, number]}
                   handleClick={handleClick}
+                  handleHover={handleHover}
                   brgyRef={brgyRef}
                   onHover={setHoveredBrgy}
                   rotate={autorotate}
@@ -142,10 +152,7 @@ export default function App() {
         )}
         
         {/*/maps/*/}
-
-        {hoveredBrgy && (
-          <div className="
-            absolute 
+        <div className={`absolute ... ${hoveredBrgy ? "opacity-100" : "opacity-0"}
             top-35
             lg:top-25
             right-4 
@@ -154,11 +161,9 @@ export default function App() {
             lg:text-2xl 
             px-2 
             py-1 
-            rounded 
-          ">
-            {hoveredBrgy.split("_").join(" ")}
-          </div>
-        )}
+            rounded `}>
+          {hoveredBrgy?.split("_").join(" ")}
+        </div>
       </div>
       <DashBoard handleClick={handleClick} activeBarangay={activeBarangay} mapOn={mapOn}/>
     </SideBar>

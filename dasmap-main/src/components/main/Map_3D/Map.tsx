@@ -1,8 +1,9 @@
-import { useGLTF, OrbitControls, useBoxProjectedEnv, Html, Wireframe, gridHe} from '@react-three/drei'
+import { useGLTF, OrbitControls } from '@react-three/drei'
 import { useRef, useEffect, useState, Suspense } from 'react'
-import { useFrame, useThree, extend } from "@react-three/fiber"
+import { useFrame, useThree, extend, invalidate } from "@react-three/fiber"
 import * as THREE from 'three'
 import { BrgyMeshInfo } from "@/components/main/Map_3D/meshInfo"
+import { a, useSpring } from "@react-spring/three"
 
 type vectorFormat = [number,number,number]
 
@@ -14,6 +15,7 @@ interface MoveCamProps {
 
 export interface MapActions {
   handleClick : (name:string) => void
+  handleHover : (name:string) => void
   activeBarangay : string | null
   targetPosition : vectorFormat
   brgyRef : React.RefObject<Record<string, THREE.Mesh | null>>    
@@ -22,7 +24,7 @@ export interface MapActions {
 }
 
 function MoveCam({ target, active, targetPosition }: MoveCamProps) {
-  const { camera, invalidate } = useThree()
+  const { camera} = useThree()
   const startPos = useRef(new THREE.Vector3())
   const controlPos = useRef(new THREE.Vector3())
   const endPos = useRef(new THREE.Vector3())
@@ -30,7 +32,6 @@ function MoveCam({ target, active, targetPosition }: MoveCamProps) {
   const theta = useRef(0)
 
   useEffect(() => {
-    invalidate()
     if (active && target) {
       // where we start (camera's current position)
       startPos.current.copy(camera.position)
@@ -80,40 +81,67 @@ function MoveCam({ target, active, targetPosition }: MoveCamProps) {
 
 export const DasMap: React.FC<MapActions> = ({
     handleClick,
+    handleHover,
     activeBarangay,
     targetPosition,
     brgyRef,
     onHover,
     rotate
   }) => {
-
-  const { nodes, materials } = useGLTF('./DASMA3.glb')
+    
+  const { nodes, materials } = useGLTF('./DASMA-draco.glb')
   const BrgyInfo = BrgyMeshInfo ?? []
   const mat = materials['SVGMat.032']
-  return (
-      <group position={[-1, 0, -2]} dispose={null}>
-        {BrgyInfo.map((brg) => (
-              <mesh
-                onPointerOver={() => onHover(brg.name)}
-                onPointerOut={() => onHover(null)}
-                key={brg.name}
-                ref={(e) => {if (e) brgyRef.current[brg.name] = e}}
-                geometry={(nodes[brg.name] as THREE.Mesh).geometry}
-                material={mat}
-                position={(brg.position as vectorFormat) ?? [0,0,0]}  
-                rotation={(brg.rotation as vectorFormat) ?? [0,0,0]}  
-                scale={(brg.scale as vectorFormat) ?? 19.644} 
-                onClick={() => {
-                  console.log(`Clicked ${brg.name}`)
-                  handleClick(brg.name)
-                }}
-              >
-                <meshStandardMaterial color={activeBarangay === brg.name ? 'red' : 'gray'} />
-              </mesh>
-          ))
-        }
-          
-        <Suspense fallback={null}>
+
+  return (  
+    <group position={[-1, 1, -2]} dispose={null}>
+      {BrgyInfo.map((brg) => {
+        const { scale, color, position } = useSpring<{
+          scale: [number, number, number]
+          color: string
+          position: [number, number, number]
+        }>({
+          scale:
+            brg.name === activeBarangay
+              ? [19.644, 19.700, 19] // taller
+              : [19.644, 19.644, 19],
+          position:
+            brg.name === activeBarangay
+              ? [
+                  (brg.position as vectorFormat)?.[0] ?? 0,
+                  ((brg.position as vectorFormat)?.[1] ?? 0) + 0.5,
+                  (brg.position as vectorFormat)?.[2] ?? 0,
+                ]
+              : (brg.position as vectorFormat) ?? [0, 0, 0],
+          color: brg.name === activeBarangay ? "red" : "gray",
+          config: { duration: 1500 },
+        })
+
+        return (
+          <a.mesh
+            onPointerOver={() => {if(!activeBarangay) handleHover(brg.name)}}
+            onPointerOut={() => {if(!activeBarangay) handleHover('')}}
+            key={brg.name}
+            ref={(e) => {
+              if (e) brgyRef.current[brg.name] = e
+            }}
+            geometry={(nodes[brg.name] as THREE.Mesh).geometry}
+            material={mat}
+            position={position}
+            rotation={(brg.rotation as vectorFormat) ?? [0, 0, 0]}
+            scale={scale} // <-- animated scale
+            onClick={() => {
+              console.log(`Clicked ${brg.name}`)
+              handleClick(brg.name)
+            }}
+          >
+            {/* Animated material color */}
+            <a.meshStandardMaterial color={color} />
+          </a.mesh>
+        )
+      })}
+
+      <Suspense fallback={null}>
         <OrbitControls
           minPolarAngle={0}
           maxPolarAngle={Math.PI / 3}
@@ -125,14 +153,15 @@ export const DasMap: React.FC<MapActions> = ({
           maxDistance={60}
           target={new THREE.Vector3(...targetPosition)}
         />
-        </Suspense>
-        <MoveCam 
-          target={activeBarangay ? brgyRef.current[activeBarangay] : null} 
-          active={activeBarangay} 
-          targetPosition={targetPosition} 
-        />
-      </group>
+      </Suspense>
+
+      <MoveCam
+        target={activeBarangay ? brgyRef.current[activeBarangay] : null}
+        active={activeBarangay}
+        targetPosition={targetPosition}
+      />
+    </group>
   )
 }
 
-useGLTF.preload('./DASMA3.glb')
+useGLTF.preload('./DASMA-draco.glb')
