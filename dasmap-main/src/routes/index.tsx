@@ -56,7 +56,6 @@ export default function App() {
 
   //Global Click Function
   function handleClick(name: string) {
-    GetData()
     if (activeBarangay === name && mapOn) {
       setActiveBarangay("")
       resetCamera()
