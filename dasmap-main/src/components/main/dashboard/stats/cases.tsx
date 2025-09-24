@@ -39,7 +39,7 @@ export default function CaseCount() {
   return (
     <Card className="flex flex-col col-span-2 bg-[#282c34] border-[#3d4452] text-white ring-0 ring-red-400 hover:ring-3 transition ease-in-out">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Brg_Name - Total Predicted Cases</CardTitle>
+        <CardTitle>Total Predicted Cases</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0 ">
@@ -85,7 +85,7 @@ export default function CaseCount() {
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground bg-black"
                         >
-                          Recoveries
+                          Cases
                         </tspan>
                       </text>
                     )
@@ -101,7 +101,7 @@ export default function CaseCount() {
           Trending up by n% this month <TrendingUp className="h-4 w-4" />
         </div>
         <div className="text-muted-foreground leading-none">
-          Showing total recovries for the last n months
+          Showing total Predicited Cases for the last n months
         </div>
       </CardFooter>
     </Card>

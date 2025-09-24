@@ -13,7 +13,7 @@ import { DashBoard } from '@/components/main/dashboard/drawer'
 import * as THREE from "three"
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import Header from '../components/main/Header'
-import { Rotate3d, Box } from "lucide-react"
+import { Rotate3d, Flame} from "lucide-react"
 import Terms from "@/components/main/terms"
 
 
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/")({
 
 export default function App() {
   const [ mapOn, setMapOn ] = useState(false)
-  const [autorotate, setautorotate] = useState(false)
+  const [autorotate, setautorotate] = useState(true)
   const [activeBarangay, setActiveBarangay] = useState("")
   const [targetPosition, setTargetPosition] = useState([0, 0, 0])
   const [hoveredBrgy, setHoveredBrgy] = useState<string | null>(null)
@@ -98,18 +98,31 @@ export default function App() {
         <div className="fixed top-[20%] left-[5%] lg:top-[15%] lg:left-[20%] z-50 w-[90vw] lg:w-[60vw]">
           <Terms />
         </div>
-        <div className="fixed top-6 right-2 z-50">
-          <Button
-            onClick={() => {
-              autorotate === true ? setautorotate(false) : setautorotate(true)
-            }
-            }
-            className="w-[40px] h-[40px] rounded-xl bg-red-600"
-          >
-            <Rotate3d />
-          </Button>
-        </div>
-        <div className="fixed top-25 right-2 md:top-8 md:right-15 lg:top-8 lg:right-15 z-50">
+        <div className="fixed top-6 right-2 lg:right-20 z-50 ">
+            <Button
+              onClick={() => {
+                autorotate === true ? setautorotate(false) : setautorotate(true)
+              }
+              }
+              className="w-[30px] h-[40px] lg:w-[40px] lg:h-[40px] rounded-xl bg-red-700"
+            >
+              <Flame />
+            </Button>
+          </div>
+        {mapOn && (
+          <div className="fixed top-6 right-11 lg:right-5 z-50">
+            <Button
+              onClick={() => {
+                autorotate === true ? setautorotate(false) : setautorotate(true)
+              }
+              }
+              className="w-[30px] h-[40px] lg:w-[40px] lg:h-[40px] rounded-xl bg-red-700"
+            >
+              <Rotate3d />
+            </Button>
+          </div>
+        )}
+        <div className="fixed top-25 right-2 md:top-8 md:right-35 lg:top-8 lg:right-35 z-50">
           <div className="flex flex-row items-center justify-center text-white font-[Formula]">
             <Label className="mr-2 text-lg">2D</Label>
               <Switch checked={mapOn} onCheckedChange={switchMap} className="mb-1 data-[state=checked]:bg-green-500" />

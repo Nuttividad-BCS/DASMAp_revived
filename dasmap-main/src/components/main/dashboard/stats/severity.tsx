@@ -20,7 +20,7 @@ import {
 
 export const description = "A radial chart with stacked sections"
 
-const chartData = [{ month: "january", mobile: 570 }]
+const chartData = [{ month: "january", mobile: 59, max:100 }]
 
 const chartConfig = {
   mobile: {
@@ -30,12 +30,18 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export default function SeverityClass() {
-  const totalVisitors = chartData[0].mobile
-
+  let SeverityLevel = Math.min((chartData[0].mobile / chartData[0].max) * 100, 100) 
+  let SevLvl = ""
+  if (SeverityLevel < 40) {
+    SevLvl = "Low"
+  } else if (SeverityLevel < 60 && SeverityLevel > 40) {
+    SevLvl = "Medium"
+  } else { SevLvl = "High"}
+  
   return (
     <Card className="flex flex-col col-span-2 bg-[#282c34] border-[#3d4452] text-white ring-0 ring-red-400 hover:ring-3 transition ease-in-out">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Brg_Name - Severity Level</CardTitle>
+        <CardTitle>Severity Level</CardTitle>
         <CardDescription>For the Month of: </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-1 items-center pb-0">
@@ -45,15 +51,17 @@ export default function SeverityClass() {
         >
           <RadialBarChart
             data={chartData}
-            endAngle={180}
+            startAngle={180}
+            endAngle={0}
             innerRadius={80}
             outerRadius={130}
-          >
+          > 
+          
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
+            <PolarRadiusAxis tick={false} tickLine={false} axisLine={false} domain={[0, 100]}>
               <Label
                 className="text-white"
                 content={({ viewBox }) => {
@@ -65,14 +73,14 @@ export default function SeverityClass() {
                           y={(viewBox.cy || 0) - 16}
                           className="fill-foreground text-2xl font-bold fill-white"
                         >
-                          {totalVisitors.toLocaleString()}
+                          {SevLvl}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 4}
                           className="fill-muted-foreground bg-black"
                         >
-                          Visitors
+                          Risk
                         </tspan>
                       </text>
                     )
@@ -80,19 +88,12 @@ export default function SeverityClass() {
                 }}
               />
             </PolarRadiusAxis>
-            <RadialBar
-              dataKey="desktop"
-              stackId="a"
-              cornerRadius={5}
-              fill="var(--color-desktop)"
-              className="stroke-transparent stroke-2"
-            />
+            
             <RadialBar
               dataKey="mobile"
-              fill="var(--color-mobile)"
-              stackId="a"
-              cornerRadius={5}
-              className="stroke-transparent stroke-2"
+              fill={SeverityLevel < 60 ? SeverityLevel < 41 ? "green" : "orange" : "red"}
+              cornerRadius={0}
+              background={{ fill: "#3d4452" }} // <-- full-track background
             />
           </RadialBarChart>
         </ChartContainer>
@@ -102,7 +103,7 @@ export default function SeverityClass() {
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
         <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
+          Severity Level for current month
         </div>
       </CardFooter>
     </Card>

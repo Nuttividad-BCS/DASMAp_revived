@@ -77,6 +77,7 @@ export const DashBoard: React.FC<DashProps> = ({
                 lg:bg-black/[.70]
             ">
                 <div className="
+                scroll-hidden
                 overflow-y-auto
                 h-full
                 grid
