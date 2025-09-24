@@ -37,7 +37,7 @@ const chartConfig = {
 
 export default function MortalChart() {
   return (
-    <Card className="flex flex-col col-span-2 bg-[#282c34] border-[#3d4452] text-white">
+    <Card className="flex flex-col col-span-2 bg-[#282c34] border-[#3d4452] text-white ring-0 ring-red-400 hover:ring-3 transition ease-in-out">
       <CardHeader className="items-center pb-0">
         <CardTitle>Brg_Name - Mortality Count</CardTitle>
         <CardDescription>January - June 2024</CardDescription>

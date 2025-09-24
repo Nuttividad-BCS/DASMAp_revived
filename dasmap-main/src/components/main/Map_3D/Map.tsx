@@ -89,7 +89,7 @@ export const DasMap: React.FC<MapActions> = ({
     rotate
   }) => {
     
-  const { nodes, materials } = useGLTF('./DASMA-draco.glb')
+  const { nodes, materials } = useGLTF('./draco.glb')
   const BrgyInfo = BrgyMeshInfo ?? []
   const mat = materials['SVGMat.032']
 
@@ -101,7 +101,7 @@ export const DasMap: React.FC<MapActions> = ({
           color: string
           position: [number, number, number]
         }>({
-          scale:
+          scale: brg.scale ? brg.scale :
             brg.name === activeBarangay
               ? [19.644, 19.700, 19] // taller
               : [19.644, 19.644, 19],
@@ -119,6 +119,8 @@ export const DasMap: React.FC<MapActions> = ({
 
         return (
           <a.mesh
+            castShadow 
+            receiveShadow  
             onPointerOver={() => {if(!activeBarangay) handleHover(brg.name)}}
             onPointerOut={() => {if(!activeBarangay) handleHover('')}}
             key={brg.name}
@@ -140,6 +142,20 @@ export const DasMap: React.FC<MapActions> = ({
           </a.mesh>
         )
       })}
+
+      <directionalLight
+        castShadow
+        position={[10, 20, 10]} 
+        intensity={1.5}          
+        shadow-mapSize-width={2048} 
+        shadow-mapSize-height={2048}
+        shadow-camera-far={50}
+        shadow-camera-near={1}
+        shadow-camera-left={-20}
+        shadow-camera-right={20}
+        shadow-camera-top={20}
+        shadow-camera-bottom={-20}
+      />
 
       <Suspense fallback={null}>
         <OrbitControls

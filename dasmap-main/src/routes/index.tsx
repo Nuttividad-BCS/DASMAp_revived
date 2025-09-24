@@ -120,7 +120,10 @@ export default function App() {
         {/*/maps/*/} 
         {mapOn && (
           <div className="h-screen w-full">
-            <Canvas frameloop="always" dpr={[0.6,1]}>
+            <Canvas 
+              shadows 
+              camera={{ position: [0, 5, 15], fov: 50 }} 
+              frameloop="always" dpr={[0.6,1]}>
               <AdaptiveDpr pixelated />
               <ambientLight intensity={0.7} />
               <directionalLight position={[20, 5, 10]} intensity={0.8} />

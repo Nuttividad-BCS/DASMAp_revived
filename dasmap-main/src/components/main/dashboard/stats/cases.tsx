@@ -22,7 +22,7 @@ import { ChartConfig, ChartContainer } from "@/components/ui/chart"
 export const description = "A radial chart with text"
 
 const chartData = [
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
+  { browser: "safari", visitors: 200, fill: "#ff5555" },
 ]
 
 const chartConfig = {
@@ -35,11 +35,11 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export default function RecovChart() {
+export default function CaseCount() {
   return (
     <Card className="flex flex-col col-span-2 bg-[#282c34] border-[#3d4452] text-white ring-0 ring-red-400 hover:ring-3 transition ease-in-out">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Brg_Name - Total Recoveries</CardTitle>
+        <CardTitle>Brg_Name - Total Predicted Cases</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0 ">

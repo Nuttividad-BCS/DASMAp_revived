@@ -15,6 +15,9 @@ import React from "react"
 import RecovChart from "@/components/main/dashboard/stats/recovery"
 import MortalChart from "@/components/main/dashboard/stats/mortality"
 import RadarRatio from "@/components/main/dashboard/stats/RMratio"
+import SeverityClass from "@/components/main/dashboard/stats/severity"
+import TimeSeries from "@/components/main/dashboard/stats/timeseries"
+import CaseCount from "@/components/main/dashboard/stats/cases"
 import { Label } from "recharts"
 import { BrgyMeshInfo } from "../Map_3D/meshInfo.withCoords"
 
@@ -101,9 +104,12 @@ export const DashBoard: React.FC<DashProps> = ({
                         </div>
                         <DrawerDescription className="col-span-1 lg:col-span-8 lg:justify-self-center">Dashboard Overview and Model Predictions</DrawerDescription>
                     </DrawerHeader>
+                    <CaseCount />
+                    <SeverityClass />
                     <RecovChart />
                     <MortalChart />
                     <RadarRatio />
+                    <TimeSeries />
                 </div>
             </DrawerContent>
         </Drawer>
