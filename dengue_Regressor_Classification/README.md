@@ -1,4 +1,3 @@
-echo "# DASMAp Revived  
 
 This repository contains dengue case prediction models and tools for analyzing barangay-level dengue risk.  
 
