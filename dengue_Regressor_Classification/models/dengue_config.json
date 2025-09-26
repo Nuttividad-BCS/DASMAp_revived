@@ -1,0 +1,23 @@
+{
+    "feature_columns": [
+        "YEAR",
+        "MONTH",
+        "RAINFALL",
+        "TMAX",
+        "TMIN",
+        "WIND_SPEED",
+        "WIND_DIRECTION",
+        "RH",
+        "TAVG",
+        "Cases_Lagged",
+        "Cases_Rolling_Avg_3M"
+    ],
+    "monthly_thresholds": {
+        "low_max": 2,
+        "medium_max": 5
+    },
+    "yearly_thresholds": {
+        "low_max": 16,
+        "medium_max": 35
+    }
+}
