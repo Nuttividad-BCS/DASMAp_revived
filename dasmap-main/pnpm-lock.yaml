@@ -122,6 +122,9 @@ importers:
       react-svg-pan-zoom:
         specifier: ^3.13.1
         version: 3.13.1
+      react-timer-hook:
+        specifier: ^4.0.5
+        version: 4.0.5(react@19.1.1)
       react-zoom-pan-pinch:
         specifier: ^3.7.0
         version: 3.7.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -4793,6 +4796,11 @@ packages:
 
   react-svg-pan-zoom@3.13.1:
     resolution: {integrity: sha512-mUGoXfo255c+T/FAdZ5Fr0paw9OpAz4owGku5bRjUOzSKUmqUJpuYbscuuzOIJWbmrJ0N/9mOWPE8JdjSYITbQ==}
+
+  react-timer-hook@4.0.5:
+    resolution: {integrity: sha512-elDxx4OIxBTbm4rXSK5cjBHkq06prO2qY9JzoYxOa11AkL3ij69jp0VuDUOqcehEK38CV0uu7FzUKtPVISRLKA==}
+    peerDependencies:
+      react: '>=16.8.0'
 
   react-transition-group@4.4.5:
     resolution: {integrity: sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==}
@@ -10793,6 +10801,10 @@ snapshots:
     dependencies:
       prop-types: 15.8.1
       transformation-matrix: 2.16.1
+
+  react-timer-hook@4.0.5(react@19.1.1):
+    dependencies:
+      react: 19.1.1
 
   react-transition-group@4.4.5(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:

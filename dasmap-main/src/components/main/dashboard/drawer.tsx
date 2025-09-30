@@ -8,9 +8,19 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Button } from "../../ui/button"
 import { useState, useEffect } from "react"
 import { motion, useDragControls } from "framer-motion"
+import { Label as Lbl} from "@/components/ui/label"
 import React from "react"
 import RecovChart from "@/components/main/dashboard/stats/recovery"
 import MortalChart from "@/components/main/dashboard/stats/mortality"
@@ -21,7 +31,6 @@ import CaseCount from "@/components/main/dashboard/stats/cases"
 import { Label } from "recharts"
 import { BrgyMeshInfo } from "../Map_3D/meshInfo.withCoords"
 import Papa from "papaparse"
-import fs from "fs"
 
 
 
@@ -36,8 +45,25 @@ export const DashBoard: React.FC<DashProps> = ({
     activeBarangay,
     mapOn
 }) => {
+    const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+    ]
+    const years = Array.from({ length: 16 }, (_, i) => 2010 + i)
     //Open CSV Predictions
     //CHANGE THIS TO SUPABASE QUERYING
+    const [ year, setYear ] = useState("2024")
+    const [ month, setMonth] = useState("1")
     const [ predCases, setPredCases ] = useState("")
     const [ riskLvl, setRiskLvl ] = useState("")
     const [ open, setOpen ] = useState(false)
@@ -45,7 +71,7 @@ export const DashBoard: React.FC<DashProps> = ({
     const [ pc, setPc] = useState("")
     const [ coord, setCoord ] = useState([0,0])
 
-
+    
     const loadCsv = async () => {
         const response = await fetch("/test_data.csv"); // fetch from /public/data.csv
         const text = await response.text()
@@ -118,8 +144,8 @@ export const DashBoard: React.FC<DashProps> = ({
                 lg:grid-cols-6
                 gap-8
                 p-5">
-                    <DrawerHeader className="grid col-span-1 lg:col-span-6 grid-cols-1 lg:grid-cols-4 justify-self-center">
-                        <div className="col-span-1 lg:col-span-4 text-white grid lg:grid-cols-10 text-xl gap-5 lg:gap-0">
+                    <DrawerHeader className="grid col-span-1 lg:col-span-6 grid-cols-1 lg:grid-cols-8 justify-self-center">
+                        <div className="col-span-1 lg:col-span-8 text-white grid lg:grid-cols-10 text-xl gap-5 lg:gap-0 mb-4">
                             <DrawerTitle className="col-span-1 lg:col-span-2 text-white ">
                                 Barangay Name: {activeBarangay.split("_").join(" ")}
                             </DrawerTitle>
@@ -136,12 +162,45 @@ export const DashBoard: React.FC<DashProps> = ({
                                 Latitude: {coord[1]}
                             </DrawerTitle>
                         </div>
-                        <DrawerDescription className="col-span-1 lg:col-span-8 lg:justify-self-center">Dashboard Overview and Model Predictions</DrawerDescription>
+                        <div className="col-span-1 lg:col-span-8 text-white grid grid-cols-4 lg:grid-cols-8 gap-3 lg:gap-5 mb-3">
+                            <Lbl className="lg:col-span-1 text-xl lg:justify-self-end">Year:</Lbl>
+                            <Select value={year} onValueChange={setYear}>
+                                <SelectTrigger className="w-full col-span-3 lg:col-span-3">
+                                    <SelectValue placeholder="Select a Year" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                    <SelectLabel>Year</SelectLabel>
+                                    {years.map((year) => (
+                                        <SelectItem key={year} value={year.toString()}>
+                                        {year}
+                                        </SelectItem>
+                                    ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                            <Lbl className="lg:col-span-1 text-xl lg:justify-self-end">Month:</Lbl>
+                            <Select value={month} onValueChange={setMonth}>
+                            <SelectTrigger className="w-full col-span-3 lg:col-span-3">
+                                <SelectValue placeholder="Select a Month" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                {months.map((month, index) => (
+                                    <SelectItem key={index + 1} value={(index + 1).toString()}>
+                                    {month}
+                                    </SelectItem>
+                                ))}
+                                </SelectGroup>
+                            </SelectContent>
+                            </Select>
+                        </div>
+                        <DrawerDescription className="col-span-1 lg:col-span-8 lg:justify-self-center mt-4">Dashboard Overview and Model Predictions</DrawerDescription>
                     </DrawerHeader>
-                    <CaseCount predicted={predCases}/>
-                    <SeverityClass risklevel={riskLvl}/>
-                    <RecovChart />
-                    <MortalChart />
+                    <CaseCount predicted={predCases} year={year} month={month ? months[parseInt(month) - 1] : ""}/>
+                    <SeverityClass risklevel={riskLvl} year={year} month={month ? months[parseInt(month) - 1] : ""}/>
+                    <RecovChart year={year} month={month ? months[parseInt(month) - 1] : ""}/>
+                    <MortalChart year={year} month={month ? months[parseInt(month) - 1] : ""}/>
                     <RadarRatio />
                     <TimeSeries />
                 </div>

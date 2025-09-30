@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from '@/components/ui/button'
 import { Switch } from "@/components/ui/switch"
 import { createFileRoute } from '@tanstack/react-router'
-import { useState, useRef, Suspense, useEffect } from "react"
+import { useState, useRef, Suspense, useEffect, useMemo } from "react"
 import { Environment, PerspectiveCamera, AdaptiveDpr} from "@react-three/drei"
 import { DasMap } from "@/components/main/Map_3D/Map"
 import { DasMap2D } from "@/components/main/Map_2D/Map"
@@ -79,7 +79,8 @@ export default function App() {
       }
     }
   }
-  
+
+
   return (
 
     <SideBar
@@ -97,6 +98,7 @@ export default function App() {
         <div className="fixed top-[20%] left-[5%] lg:top-[15%] lg:left-[20%] z-50 w-[90vw] lg:w-[60vw]">
           <Terms />
         </div>
+        <Label className="text-gray-600 font-[Formula]">Last Model Update: January 1, 2025</Label>
         <div className="fixed top-6 right-2 lg:right-20 z-50 ">
             <Button
               onClick={() => {

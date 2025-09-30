@@ -19,6 +19,11 @@ import {
 } from "@/components/ui/card"
 import { ChartConfig, ChartContainer } from "@/components/ui/chart"
 
+interface MortalityProps {
+  year: string
+  month: string
+}
+
 export const description = "A radial chart with text"
 
 const chartData = [
@@ -35,12 +40,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export default function MortalChart() {
+export default function MortalChart({year,month}:MortalityProps) {
   return (
     <Card className="flex flex-col col-span-2 bg-[#282c34] border-[#3d4452] text-white ring-0 ring-red-400 hover:ring-3 transition ease-in-out">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Mortality Count</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Mortality Rate</CardTitle>
+        <CardDescription>For the Month and year of: {`${month}, ${year}`}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0 ">
         <ChartContainer

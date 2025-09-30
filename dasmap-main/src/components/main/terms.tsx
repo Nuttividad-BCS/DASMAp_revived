@@ -16,12 +16,9 @@ import { useState, useEffect} from "react"
 import { toast } from "sonner"
 
 export default function Terms() {
-    const [ open, setOpen ] = useState(true)
     const [ checked, setChecked ] = useState(false)
-    
-    useEffect(() => {
-        if (!checked) {setOpen(true)}
-    })
+    const [ open, setOpen ] = useState(!checked)
+
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>

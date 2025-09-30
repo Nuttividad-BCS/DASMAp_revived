@@ -20,6 +20,8 @@ import {
 
 interface SeverityClassProps {
   risklevel: string
+  year: string
+  month: string
 }
 
 export const description = "A radial chart with stacked sections"
@@ -33,12 +35,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export default function SeverityClass({risklevel}:SeverityClassProps) {
+export default function SeverityClass({risklevel,year,month}:SeverityClassProps) {
   return (
     <Card className="flex flex-col col-span-2 bg-[#282c34] border-[#3d4452] text-white ring-0 ring-red-400 hover:ring-3 transition ease-in-out">
       <CardHeader className="items-center pb-0">
         <CardTitle>Severity Level</CardTitle>
-        <CardDescription>For the Month of: </CardDescription>
+        <CardDescription>For the Month and year of: {`${month}, ${year}`}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-1 items-center pb-0">
         <ChartContainer
@@ -52,11 +54,7 @@ export default function SeverityClass({risklevel}:SeverityClassProps) {
             innerRadius={80}
             outerRadius={130}
           > 
-          
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
+        
             <PolarRadiusAxis tick={false} tickLine={false} axisLine={false} domain={[0, 100]}>
               <Label
                 className="text-white"
