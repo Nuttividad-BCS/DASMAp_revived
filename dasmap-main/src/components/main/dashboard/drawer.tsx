@@ -20,6 +20,9 @@ import TimeSeries from "@/components/main/dashboard/stats/timeseries"
 import CaseCount from "@/components/main/dashboard/stats/cases"
 import { Label } from "recharts"
 import { BrgyMeshInfo } from "../Map_3D/meshInfo.withCoords"
+import Papa from "papaparse"
+import fs from "fs"
+
 
 
 interface DashProps {
@@ -33,10 +36,22 @@ export const DashBoard: React.FC<DashProps> = ({
     activeBarangay,
     mapOn
 }) => {
+    //Open CSV Predictions
+    //CHANGE THIS TO SUPABASE QUERYING
+    const [ predCases, setPredCases ] = useState("")
+    const [ riskLvl, setRiskLvl ] = useState("")
     const [ open, setOpen ] = useState(false)
     const [ popu, setPopu ] = useState(0)
     const [ pc, setPc] = useState("")
     const [ coord, setCoord ] = useState([0,0])
+
+
+    const loadCsv = async () => {
+        const response = await fetch("/test_data.csv"); // fetch from /public/data.csv
+        const text = await response.text()
+        const parsed = Papa.parse(text, { header: true })
+        return parsed.data as any[]   
+    }
 
     useEffect(() => {
         if (activeBarangay == null || activeBarangay == "") {
@@ -45,14 +60,32 @@ export const DashBoard: React.FC<DashProps> = ({
             setPc("")
             setCoord([0,0])
         } else {
-            
             const delay = setTimeout(() => {setOpen(true)}, mapOn ? 2000 : 1000)
             const current = BrgyMeshInfo.find(e => e.name === activeBarangay)
+
+            //Get Predicted data from the CSV
+            const fetchCsvAndMatch = async () => {
+                try {
+                    const result = await loadCsv()
+                    const match = result.find(e => e.BARANGAY === current?.name.replace("_"," ").toUpperCase())
+                    if (match) {
+                        setPredCases(match.Predicted_Cases ?? "")
+                        setRiskLvl(match.Risk_Level ?? "")
+                    } else {
+                        setPredCases("")
+                        setRiskLvl("")
+                    }
+                } 
+                catch (err) {
+                    console.error(err)
+                }
+            }
             if (current && current.coordinates) {
                 setPopu(current?.population2020)
                 setPc(current?.pct_of_city)
                 setCoord(current?.coordinates)
             }
+            fetchCsvAndMatch()
             return () => clearTimeout(delay)
         }
     }, [activeBarangay, mapOn])
@@ -105,8 +138,8 @@ export const DashBoard: React.FC<DashProps> = ({
                         </div>
                         <DrawerDescription className="col-span-1 lg:col-span-8 lg:justify-self-center">Dashboard Overview and Model Predictions</DrawerDescription>
                     </DrawerHeader>
-                    <CaseCount />
-                    <SeverityClass />
+                    <CaseCount predicted={predCases}/>
+                    <SeverityClass risklevel={riskLvl}/>
                     <RecovChart />
                     <MortalChart />
                     <RadarRatio />

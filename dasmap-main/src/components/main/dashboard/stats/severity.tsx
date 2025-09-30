@@ -18,6 +18,10 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
+interface SeverityClassProps {
+  risklevel: string
+}
+
 export const description = "A radial chart with stacked sections"
 
 const chartData = [{ month: "january", mobile: 59, max:100 }]
@@ -29,15 +33,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export default function SeverityClass() {
-  let SeverityLevel = Math.min((chartData[0].mobile / chartData[0].max) * 100, 100) 
-  let SevLvl = ""
-  if (SeverityLevel < 40) {
-    SevLvl = "Low"
-  } else if (SeverityLevel < 60 && SeverityLevel > 40) {
-    SevLvl = "Medium"
-  } else { SevLvl = "High"}
-  
+export default function SeverityClass({risklevel}:SeverityClassProps) {
   return (
     <Card className="flex flex-col col-span-2 bg-[#282c34] border-[#3d4452] text-white ring-0 ring-red-400 hover:ring-3 transition ease-in-out">
       <CardHeader className="items-center pb-0">
@@ -73,7 +69,7 @@ export default function SeverityClass() {
                           y={(viewBox.cy || 0) - 16}
                           className="fill-foreground text-2xl font-bold fill-white"
                         >
-                          {SevLvl}
+                          {risklevel}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
@@ -91,7 +87,7 @@ export default function SeverityClass() {
             
             <RadialBar
               dataKey="mobile"
-              fill={SeverityLevel < 60 ? SeverityLevel < 41 ? "green" : "orange" : "red"}
+              fill={risklevel == 'High' ? 'red' : risklevel == 'Low' ? 'green' : 'orange'}
               cornerRadius={0}
               background={{ fill: "#3d4452" }} // <-- full-track background
             />
