@@ -7,5 +7,6 @@ venv/
 *.log
 *.tmp
 *.swp
+.vite
 .DS_Store
 Thumbs.db
