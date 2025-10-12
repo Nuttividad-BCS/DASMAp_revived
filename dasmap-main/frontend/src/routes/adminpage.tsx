@@ -20,7 +20,7 @@ export const Route = createFileRoute('/adminpage')({
 
 async function TestButton() {
   try {
-      const response = await fetch("https://your-backend.up.railway.app/test-button", {
+      const response = await fetch("https://dasmaprevived-production.up.railway.app/test-button", {
         method: "POST",
       });
       const data = await response.json();
