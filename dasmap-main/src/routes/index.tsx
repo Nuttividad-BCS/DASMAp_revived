@@ -15,6 +15,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar'
 import Header from '../components/main/Header'
 import { Rotate3d, Flame} from "lucide-react"
 import Terms from "@/components/main/terms"
+import TopFive from "@/components/main/outerStats/topfive"
 
 
 interface RefStruct {
@@ -98,7 +99,6 @@ export default function App() {
         <div className="fixed top-[20%] left-[5%] lg:top-[15%] lg:left-[20%] z-50 w-[90vw] lg:w-[60vw]">
           <Terms />
         </div>
-        <Label className="text-gray-600 font-[Formula]">Last Model Update: January 1, 2025</Label>
         <div className="fixed top-6 right-2 lg:right-20 z-50 ">
             <Button
               onClick={() => {
@@ -130,7 +130,8 @@ export default function App() {
             <Label className="ml-2 text-lg">3D</Label>
           </div>
         </div>
-
+        <Label className="text-gray-600 font-[Formula]">Confidence Level: n%</Label>
+        <Label className="text-gray-600 font-[Formula]">Last Model Update: January 1, 2025</Label>
         {/*/maps/*/} 
         {mapOn && (
           <div className="h-screen w-full">
@@ -167,7 +168,6 @@ export default function App() {
           />
         </div>
         )}
-        
         {/*/maps/*/}
         <div className={`absolute ... ${hoveredBrgy ? "opacity-100" : "opacity-0"}
             top-35
