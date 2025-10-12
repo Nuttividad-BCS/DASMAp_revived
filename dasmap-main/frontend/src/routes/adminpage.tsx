@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import CurrentAcc from "@/components/admin/dash/acc"
 import DropZone from "@/components/admin/dash/drop"
@@ -17,12 +18,28 @@ export const Route = createFileRoute('/adminpage')({
   component: RouteComponent,
 })
 
+async function TestButton() {
+  try {
+      const response = await fetch("https://your-backend.up.railway.app/test-button", {
+        method: "POST",
+      });
+      const data = await response.json();
+      console.log("Response from backend:", data.message);
+    } catch (error) {
+      console.error("Error calling backend:", error);
+    }
+}
+
 function RouteComponent() {
+  
   return (
     <div className="bg-grid min-h-screen">
       <header className="p-4 mb-4 col-span-4 grid grid-cols-4 just bg-red-500">
       <div className="flex justify-self-center col-span-4">
         <img className='w-[55px] ml-1 mr-1'src='./DASMA-P.png' />
+        <Button onClick={() => TestButton()}>
+          Click Me
+        </Button>
         <Label 
           className="
                     font-[Formula] 
