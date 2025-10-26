@@ -16,13 +16,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { ChartConfig, ChartContainer } from "@/components/ui/chart"
+import { Separator } from "@/components/ui/separator"
+import { FetchModels } from "@/queries/getModels"
+import { GetActiveModel } from "@/queries/getActiveModel"
+import { ApplyModel } from "@/queries/applyActiveModel"
 
-export const description = "A radial chart with text"
-
-const chartData = [
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-]
+export interface ActiveModel {
+  id?: string
+  model_name: string
+  model_acc: number
+  model_status?: boolean
+  model_size?: number
+  date_created? : Date
+}
 
 const chartConfig = {
   visitors: {
@@ -35,23 +46,50 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export default function CurrentAcc() {
+  const chartData = [
+    { browser: "Accuracy", visitors: 100, fill: "var(--color-safari)" }
+  ]
+  const [models, setModels] = useState<ActiveModel[]>([])
+  const [openDialog, setOpenDialog] = useState(false)
+  const [selectedModel, setSelectedModel] = useState<ActiveModel | null>(null)
+  const [activeModel, setActiveModel] = useState<ActiveModel | null>(null)
+
+  useEffect(() => {
+  
+    const loadModels = async () => {
+      const active = await GetActiveModel()
+      if (active) setActiveModel(active)
+
+      const fetchedModels = await FetchModels()
+      setModels(fetchedModels)
+    }
+    
+    loadModels()
+  }, [])
+
+
+  const handleConfirm = async(id:string) => {
+    await ApplyModel(id)
+    setOpenDialog(false)
+  }
+
   return (
-    <Card className="flex flex-col h-full">
-      <CardHeader className="items-center justify-center pb-0">
-        <CardTitle>Current Model Accuracy</CardTitle>
-        <CardDescription>Last Updated: n Days Ago</CardDescription>
+    <Card className="flex flex-col h-full overflow-y-auto scroll-hidden">
+      <CardHeader className="items-center justify-center text-center pb-0">
+        <CardTitle>Forecast Models</CardTitle>
+        <CardDescription>Current Active Model: {activeModel?.model_name}</CardDescription>
       </CardHeader>
-      <CardContent className="flex-1 pb-0 h-full">
+      <CardContent className="grid grid-cols-1 pb-0 h-full">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
+          className="col-span-1 mx-auto aspect-square max-h-[200px]"
         >
           <RadialBarChart
             data={chartData}
             startAngle={0}
-            endAngle={250}
-            innerRadius={80}
-            outerRadius={110}
+            endAngle={activeModel ? Math.round(activeModel.model_acc * 360): 0}
+            innerRadius={50}
+            outerRadius={60}
           >
             <PolarGrid
               gridType="circle"
@@ -75,9 +113,9 @@ export default function CurrentAcc() {
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-4xl font-bold"
+                          className="fill-foreground text-2xl font-bold"
                         >
-                          {chartData[0].visitors.toLocaleString()}
+                          {activeModel ? `${(activeModel.model_acc * 100).toFixed(2)}%` : "Loading..."}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
@@ -94,11 +132,71 @@ export default function CurrentAcc() {
             </PolarRadiusAxis>
           </RadialBarChart>
         </ChartContainer>
+        <Separator />
+        <div className="col-span-1 font-[Formula] text-sm overflow-y-auto">
+          <Label>
+            Model Selection
+          </Label>
+        <Table className="mt-2 border rounded-md">
+        <TableHeader>
+          <TableRow>
+            <TableHead>Model Name</TableHead>
+            <TableHead>Accuracy</TableHead>
+            <TableHead>Action</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {models.length > 0 ? (
+            models.map((model) => (
+              <TableRow key={model.model_name}>
+                <TableCell>{model.model_name}</TableCell>
+                <TableCell>{(model.model_acc * 100).toFixed(2)}%</TableCell>
+                <TableCell>
+                  <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Confirm Model Application</DialogTitle>
+                      </DialogHeader>
+                      <p className="my-4">
+                        Are you sure you want to apply the model <strong>{selectedModel?.model_name}</strong>?
+                      </p>
+                      <DialogFooter className="flex justify-end gap-2">
+                        <Button variant="outline" onClick={() => setOpenDialog(false)}>
+                          No
+                        </Button>
+                        <Button onClick={() => handleConfirm(model.id ?? "")}>
+                          Yes
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                  <Button
+                    size="sm"     
+                    onClick={() => {
+                      setSelectedModel(model)
+                      setOpenDialog(true)
+                    }}
+                  >
+                    Apply
+                  </Button>
+                </TableCell>
+              </TableRow>
+              
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={3} className="text-center text-muted-foreground py-3">
+                No models found
+              </TableCell>
+            </TableRow>
+          )
+          }
+        </TableBody>
+      </Table>
+      </div>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 leading-none font-medium">
-            Down/Up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
+
       </CardFooter>
     </Card>
   )
