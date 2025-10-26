@@ -13,22 +13,13 @@ import { Label } from "@/components/ui/label"
 import CurrentAcc from "@/components/admin/dash/acc"
 import DropZone from "@/components/admin/dash/drop"
 import HistoryList from "@/components/admin/dash/history"
+import CsvList from '@/components/admin/dash/csvs'
+import Predict from '@/components/admin/dash/batch_predict'
 
 export const Route = createFileRoute('/adminpage')({
   component: RouteComponent,
 })
 
-async function TestButton() {
-  try {
-      const response = await fetch("https://dasmaprevived-production.up.railway.app/test-button", {
-        method: "POST",
-      });
-      const data = await response.json();
-      console.log("Response from backend:", data.message);
-    } catch (error) {
-      console.error("Error calling backend:", error);
-    }
-}
 
 function RouteComponent() {
   
@@ -37,9 +28,6 @@ function RouteComponent() {
       <header className="p-4 mb-4 col-span-4 grid grid-cols-4 just bg-red-500">
       <div className="flex justify-self-center col-span-4">
         <img className='w-[55px] ml-1 mr-1'src='./DASMA-P.png' />
-        <Button onClick={() => TestButton()}>
-          Click Me
-        </Button>
         <Label 
           className="
                     font-[Formula] 
@@ -53,10 +41,16 @@ function RouteComponent() {
       </div>
       </header>
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
-        <div className="mr-3 ml-3 lg:col-span-2 lg:h-[50vh]">
+        <div className="mr-3 ml-3 lg:col-span-1 lg:h-[50vh]">
           <CurrentAcc />
         </div>
-        <div className="mr-3 ml-3 lg:col-span-2 lg:h-[50vh]">
+        <div className="mr-3 ml-3 lg:col-span-1 lg:h-[50vh]">
+          <CsvList />
+        </div>
+        <div className="mr-3 ml-3 lg:col-span-1 lg:h-[50vh]">
+          <Predict />
+        </div>
+        <div className="mr-3 ml-3 lg:col-span-1 lg:h-[50vh]">
           <DropZone />
         </div>
         <div className="mr-3 ml-3 lg:col-span-4 lg:h-[50vh]">

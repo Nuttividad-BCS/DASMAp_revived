@@ -1,7 +1,7 @@
 "use client"
 
 import { TrendingUp } from "lucide-react"
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { Area, AreaChart, CartesianGrid, XAxis, ResponsiveContainer} from "recharts"
 
 import {
   Card,
@@ -42,7 +42,7 @@ const chartConfig = {
 
 export default function TimeSeries() {
   return (
-    <Card className="flex flex-col col-span-2 bg-[#282c34] border-[#3d4452] text-white ring-0 ring-red-400 hover:ring-3 transition ease-in-out">
+    <Card className="flex flex-col col-span-1 lg:col-span-6 bg-[#282c34] border-[#3d4452] text-white ring-0 ring-red-400 hover:ring-3 transition ease-in-out">
       <CardHeader>
         <CardTitle>Area Chart - Gradient</CardTitle>
         <CardDescription>
@@ -50,7 +50,8 @@ export default function TimeSeries() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer className="h-[300px] w-full" config={chartConfig}>
+          <ResponsiveContainer height='100%' width='100%'>
           <AreaChart
             accessibilityLayer
             data={chartData}
@@ -111,6 +112,7 @@ export default function TimeSeries() {
               stackId="a"
             />
           </AreaChart>
+          </ResponsiveContainer>
         </ChartContainer>
       </CardContent>
       <CardFooter>

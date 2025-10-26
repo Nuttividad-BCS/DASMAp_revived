@@ -125,13 +125,13 @@ export const DashBoard: React.FC<DashProps> = ({
                 text-center
                 lg:text-left
                 flex
-                items-center
+                
                 scroll-hidden
                 bg-[#1D2129] 
                 font-[Formula] 
                 h-[80vh] 
-                lg:h-[800px] 
-                lg:max-h-[500px] 
+                lg:h-[100%] 
+                lg:max-h-[90%] 
                 bg-black/[0]
                 lg:bg-black/[.70]
             ">
@@ -141,8 +141,6 @@ export const DashBoard: React.FC<DashProps> = ({
                 h-full
                 grid
                 grid-cols-1
-                lg:grid-cols-6
-                gap-8
                 p-5">
                     <DrawerHeader className="grid col-span-1 lg:col-span-6 grid-cols-1 lg:grid-cols-8 justify-self-center">
                         <div className="col-span-1 lg:col-span-8 text-white grid lg:grid-cols-10 text-xl gap-5 lg:gap-0 mb-4">
@@ -197,12 +195,16 @@ export const DashBoard: React.FC<DashProps> = ({
                         </div>
                         <DrawerDescription className="col-span-1 lg:col-span-8 lg:justify-self-center mt-4">Dashboard Overview and Model Predictions</DrawerDescription>
                     </DrawerHeader>
-                    <CaseCount predicted={predCases} year={year} month={month ? months[parseInt(month) - 1] : ""}/>
-                    <SeverityClass risklevel={riskLvl} year={year} month={month ? months[parseInt(month) - 1] : ""}/>
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-8 gap-5 ">
+                        <CaseCount predicted={predCases} year={year} month={month ? months[parseInt(month) - 1] : ""}/>
+                        <TimeSeries />
+                    </div>
+                    {/*<SeverityClass risklevel={riskLvl} year={year} month={month ? months[parseInt(month) - 1] : ""}/>
                     <RecovChart year={year} month={month ? months[parseInt(month) - 1] : ""}/>
                     <MortalChart year={year} month={month ? months[parseInt(month) - 1] : ""}/>
                     <RadarRatio />
-                    <TimeSeries />
+                    <TimeSeries />*/}
                 </div>
             </DrawerContent>
         </Drawer>
