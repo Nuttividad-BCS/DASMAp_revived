@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from batch_predict_dengue import run_batch_prediction
