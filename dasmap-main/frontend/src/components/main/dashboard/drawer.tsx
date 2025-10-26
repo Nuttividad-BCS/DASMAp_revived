@@ -59,18 +59,17 @@ export const DashBoard: React.FC<DashProps> = ({
     "November",
     "December",
     ]
-    const years = Array.from({ length: 16 }, (_, i) => 2010 + i)
+    const currentYear = new Date().getFullYear();
+    const years = Array.from({ length: currentYear - 2010 + 1 }, (_, i) => 2010 + i);
     //Open CSV Predictions
     //CHANGE THIS TO SUPABASE QUERYING
     const [ year, setYear ] = useState("2024")
     const [ month, setMonth] = useState("1")
-    const [ predCases, setPredCases ] = useState("")
-    const [ riskLvl, setRiskLvl ] = useState("")
     const [ open, setOpen ] = useState(false)
     const [ popu, setPopu ] = useState(0)
     const [ pc, setPc] = useState("")
     const [ coord, setCoord ] = useState([0,0])
-
+    const [ pred, setPred ] = useState<any[]>([])
     
     const loadCsv = async () => {
         const response = await fetch("/test_data.csv"); // fetch from /public/data.csv
@@ -89,32 +88,32 @@ export const DashBoard: React.FC<DashProps> = ({
             const delay = setTimeout(() => {setOpen(true)}, mapOn ? 2000 : 1000)
             const current = BrgyMeshInfo.find(e => e.name === activeBarangay)
 
-            //Get Predicted data from the CSV
-            const fetchCsvAndMatch = async () => {
-                try {
-                    const result = await loadCsv()
-                    const match = result.find(e => e.BARANGAY === current?.name.replace("_"," ").toUpperCase())
-                    if (match) {
-                        setPredCases(match.Predicted_Cases ?? "")
-                        setRiskLvl(match.Risk_Level ?? "")
-                    } else {
-                        setPredCases("")
-                        setRiskLvl("")
-                    }
-                } 
-                catch (err) {
-                    console.error(err)
-                }
-            }
             if (current && current.coordinates) {
                 setPopu(current?.population2020)
                 setPc(current?.pct_of_city)
                 setCoord(current?.coordinates)
             }
-            fetchCsvAndMatch()
+            
             return () => clearTimeout(delay)
         }
     }, [activeBarangay, mapOn])
+
+    useEffect(() => {
+        const fetchPredictions = async () => {
+            const response = await fetch("https://dasmaprevived-production.up.railway.app/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ year: parseInt(year), month: parseInt(month)}),
+            })
+            const data = await response.json()
+            
+            setPred(data)
+        }
+        fetchPredictions()
+    },[month, year])
+
+    const activePrediction = pred?.find(p => p.BARANGAY === activeBarangay.toUpperCase())
+    
 
     return (
         <Drawer open={open} preventScrollRestoration={true} onOpenChange={setOpen}>
@@ -197,7 +196,7 @@ export const DashBoard: React.FC<DashProps> = ({
                     </DrawerHeader>
                     
                     <div className="grid grid-cols-1 lg:grid-cols-8 gap-5 ">
-                        <CaseCount predicted={predCases} year={year} month={month ? months[parseInt(month) - 1] : ""}/>
+                        <CaseCount predicted={activePrediction} year={year} month={month ? months[parseInt(month) - 1] : ""}/>
                         <TimeSeries />
                     </div>
                     {/*<SeverityClass risklevel={riskLvl} year={year} month={month ? months[parseInt(month) - 1] : ""}/>

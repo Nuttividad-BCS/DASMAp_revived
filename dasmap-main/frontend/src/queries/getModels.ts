@@ -1,8 +1,16 @@
 import { supabase } from "@/makeclient"
 import { toast } from "sonner"
-import { ActiveModel } from "@/components/admin/dash/acc"
 
-export async function FetchModels(): Promise<ActiveModel[]> {
+export interface Models {
+  id: string
+  model_name: string
+  model_acc: number
+  model_status: boolean
+  model_size: number
+  date_created: Date
+}
+
+export async function FetchModels(): Promise<Models[]> {
   // Fetch data from Supabase
   const { data, error } = await supabase
     .from("Models")
@@ -14,7 +22,7 @@ export async function FetchModels(): Promise<ActiveModel[]> {
   }
 
   // Map Supabase columns to your Model[] format
-  const models: ActiveModel[] = data.map((row: any) => ({
+  const models: Models[] = data.map((row: any) => ({
     model_name: row.model_name,
     model_acc: row.model_acc,
     id: row.id,

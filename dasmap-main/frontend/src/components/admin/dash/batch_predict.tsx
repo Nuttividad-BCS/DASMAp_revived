@@ -31,10 +31,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { jsPDF } from "jspdf"
 import autoTable from "jspdf-autotable"
 
-
-export default function Predict() {
-
-    const months = [
+export const months = [
     "January",
     "February",
     "March",
@@ -47,9 +44,11 @@ export default function Predict() {
     "October",
     "November",
     "December",
-    ]
-    const currentYear = new Date().getFullYear();
-    const years = Array.from({ length: currentYear - 2010 + 1 }, (_, i) => 2010 + i);
+]
+
+export default function Predict() {
+    const currentYear = new Date().getFullYear()
+    const years = Array.from({ length: currentYear - 2010 + 1 }, (_, i) => 2010 + i)
     const [ year_s, setYear ] = useState(currentYear.toString())
     const [ month_s, setMonth] = useState("1")
     const [ openPanel, setOpenPanel ] = useState(false)

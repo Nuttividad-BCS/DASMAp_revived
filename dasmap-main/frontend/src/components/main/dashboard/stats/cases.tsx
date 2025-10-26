@@ -20,7 +20,11 @@ import {
 import { ChartConfig, ChartContainer } from "@/components/ui/chart"
 
 interface PredCasesProps {
-  predicted: string
+   predicted: {
+    BARANGAY: string
+    Risk_Level: string
+    Predicted_Cases: number
+  } | null
   year: string
   month: string
 }
@@ -42,6 +46,7 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export default function CaseCount({predicted,year,month} : PredCasesProps) {
+  
   return (
     <Card className="flex flex-col col-span-1 lg:col-span-2 bg-[#282c34] border-[#3d4452] text-white ring-0 ring-red-400 hover:ring-3 transition ease-in-out">
       <CardHeader className="items-center pb-0">
@@ -84,7 +89,7 @@ export default function CaseCount({predicted,year,month} : PredCasesProps) {
                           y={viewBox.cy}
                           className="fill-white text-4xl font-bold"
                         >
-                          {predicted.slice(0,4)}
+                          {predicted?.Predicted_Cases.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}

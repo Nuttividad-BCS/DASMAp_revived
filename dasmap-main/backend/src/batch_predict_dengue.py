@@ -1,20 +1,42 @@
 # batch_predict_dengue.py
 import os
+import sys
 import pandas as pd
 import numpy as np
 import joblib
 import json
 from feature_utils import compute_time_features
+import pickle
+import requests
+from io import BytesIO
 
+
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(PROJECT_ROOT)
+
+from makeClient import Supabase
+supabase = Supabase()
 # ───────────────────────────────
 # LOAD MODEL & CONFIG (RELATIVE PATHS)
 # ───────────────────────────────
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
+response = supabase.table("Models").select("model_name").eq("model_status", True).single().execute()
+model_name = response.data['model_name']
 
-MODEL_PATH = os.path.join(PROJECT_ROOT, 'models', 'dengue_xgb_model_v1.pkl')
-CONFIG_PATH = os.path.join(PROJECT_ROOT, 'models', 'dengue_config.json')
-HISTORICAL_CASES_PATH = os.path.join(PROJECT_ROOT, 'data', 'historical_data.csv')
+bucket_name = "models"  # adjust if nested
+model_path = f"versions/{model_name}"  # match your storage structure
+config_path = f"versions/dengue_config.json"
+historical_cases_path = f"main_merged/historical_data.csv"
+
+active_model = supabase.storage.from_(bucket_name).get_public_url(model_path)
+model_config = supabase.storage.from_(bucket_name).get_public_url(config_path)
+hist_cases = supabase.storage.from_(bucket_name).get_public_url(historical_cases_path)
+
+model_response = requests.get(active_model)
+config_response = requests.get(model_config)
+hist_response = requests.get(hist_cases)
+
+xgb_model = pickle.load(BytesIO(model_response.content))
+config_json = json.loads(config_response.text)
 
 
 # ───────────────────────────────
@@ -39,9 +61,9 @@ def run_batch_prediction(target_year: int, target_month: int, shared_weather=Non
         }
 
     # Load model and config
-    model = joblib.load(MODEL_PATH)
-    with open(CONFIG_PATH, 'r') as f:
-        config = json.load(f)
+    model = xgb_model
+
+    config = config_json
 
     feature_cols = config['feature_columns']
     monthly_thresh = config['monthly_thresholds']
@@ -55,7 +77,7 @@ def run_batch_prediction(target_year: int, target_month: int, shared_weather=Non
             return 'High'
 
     # Load historical cases
-    historical_cases = pd.read_csv(HISTORICAL_CASES_PATH)
+    historical_cases = pd.read_csv(hist_cases)
     historical_cases = historical_cases[historical_cases['BARANGAY'] != 'DASMARIÑAS']
 
     barangays = historical_cases['BARANGAY'].unique()

@@ -25,6 +25,7 @@ import { Separator } from "@/components/ui/separator"
 import { FetchModels } from "@/queries/getModels"
 import { GetActiveModel } from "@/queries/getActiveModel"
 import { ApplyModel } from "@/queries/applyActiveModel"
+import { Models } from "@/queries/getModels"
 
 export interface ActiveModel {
   id?: string
@@ -49,7 +50,7 @@ export default function CurrentAcc() {
   const chartData = [
     { browser: "Accuracy", visitors: 100, fill: "var(--color-safari)" }
   ]
-  const [models, setModels] = useState<ActiveModel[]>([])
+  const [models, setModels] = useState<Models[]>([])
   const [openDialog, setOpenDialog] = useState(false)
   const [selectedModel, setSelectedModel] = useState<ActiveModel | null>(null)
   const [activeModel, setActiveModel] = useState<ActiveModel | null>(null)
@@ -152,24 +153,6 @@ export default function CurrentAcc() {
                 <TableCell>{model.model_name}</TableCell>
                 <TableCell>{(model.model_acc * 100).toFixed(2)}%</TableCell>
                 <TableCell>
-                  <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Confirm Model Application</DialogTitle>
-                      </DialogHeader>
-                      <p className="my-4">
-                        Are you sure you want to apply the model <strong>{selectedModel?.model_name}</strong>?
-                      </p>
-                      <DialogFooter className="flex justify-end gap-2">
-                        <Button variant="outline" onClick={() => setOpenDialog(false)}>
-                          No
-                        </Button>
-                        <Button onClick={() => handleConfirm(model.id ?? "")}>
-                          Yes
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
                   <Button
                     size="sm"     
                     onClick={() => {
@@ -191,6 +174,24 @@ export default function CurrentAcc() {
             </TableRow>
           )
           }
+          <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Confirm Model Application</DialogTitle>
+              </DialogHeader>
+              <p className="my-4">
+                Are you sure you want to apply the model <strong>{selectedModel?.model_name}</strong>?
+              </p>
+              <DialogFooter className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setOpenDialog(false)}>
+                  No
+                </Button>
+                <Button onClick={() => handleConfirm(selectedModel?.id ?? "")}>
+                  Yes
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </TableBody>
       </Table>
       </div>
