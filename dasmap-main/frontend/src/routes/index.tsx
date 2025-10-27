@@ -127,6 +127,39 @@ export default function App() {
         setPred(data)
       }
       fetchPredictions()
+    
+  const minCases = Math.min(...pred.map(p => p.Predicted_Cases))
+  const maxCases = Math.max(...pred.map(p => p.Predicted_Cases))
+
+  function getColor(intensity: number) {
+    const r = 255
+    const g = Math.round(204 - 204 * intensity)
+    const b = Math.round(204 - 204 * intensity)
+    return `rgb(${r},${g},${b})`
+  }
+
+  // helper to match SVG id format
+  function normalizeBarangay(name: string) {
+    return (
+      name
+        .toLowerCase()
+        .replace(/\s+/g, "_") // replace spaces with underscores
+        .replace(/\./g, "")   // remove dots
+        .replace(/ñ/g, "n")   // normalize characters
+        .replace(/\b\w/g, c => c.toUpperCase()) // capitalize words
+    )
+  }
+
+  pred.forEach(p => {
+    const intensity = (p.Predicted_Cases - minCases) / (maxCases - minCases)
+    const id = normalizeBarangay(p.BARANGAY)
+    const region = document.getElementById(id)
+    if (region) {
+      region.style.fill = getColor(intensity)
+    } else {
+      console.warn(`No matching region for ${p.BARANGAY} (${id})`)
+    }
+  })
   },[month_s, year_s])
 
     return (
