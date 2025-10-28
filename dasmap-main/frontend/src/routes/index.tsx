@@ -170,11 +170,15 @@ export default function App() {
     const minCases = Math.min(...pred.map(p => p.Predicted_Cases));
     const maxCases = Math.max(...pred.map(p => p.Predicted_Cases));
 
-    function getColor(intensity: number) {
+    function getColor(cases: number) {
+      const intensity = Math.min(cases / 2, 1);
+
+      // Scale color from light pink to red
       const r = 255;
       const g = Math.round(204 - 204 * intensity);
       const b = Math.round(204 - 204 * intensity);
-      return `rgb(${r},${g},${b})`;
+
+      return `rgb(${r}, ${g}, ${b})`;
     }
 
     function normalizeBarangay(name: string) {

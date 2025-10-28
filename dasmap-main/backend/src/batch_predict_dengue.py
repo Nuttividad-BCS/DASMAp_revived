@@ -105,7 +105,8 @@ def run_batch_prediction(target_year: int, target_month: int, shared_weather=Non
     input_df = input_df[feature_cols]
 
     predicted_cases = model.predict(input_df)
-    predicted_cases = np.clip(predicted_cases, -1, None)
+    predicted_cases = np.clip(predicted_cases, 0, None)
+    predicted_cases = np.ceil(predicted_cases).astype(int)
 
     risk_levels = [assign_monthly_risk(c) for c in predicted_cases]
 
