@@ -9,20 +9,43 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { useEffect, useState } from 'react'
 import { Label } from "@/components/ui/label"
 import CurrentAcc from "@/components/admin/dash/acc"
 import DropZone from "@/components/admin/dash/drop"
 import HistoryList from "@/components/admin/dash/history"
 import CsvList from '@/components/admin/dash/csvs'
 import Predict from '@/components/admin/dash/batch_predict'
+import { useNavigate } from '@tanstack/react-router'
+import { supabase } from '@/makeclient'
 
 export const Route = createFileRoute('/adminpage')({
   component: RouteComponent,
 })
 
-
 function RouteComponent() {
-  
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        navigate({to: "/adminlog"})// redirect if not logged in
+      } else {
+        setLoading(false)
+      }
+    }
+    checkAuth()
+  }, [navigate])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
+        <p>Loading...</p>
+      </div>
+    )
+  }
+
   return (
     <div className="bg-grid min-h-screen">
       <header className="p-4 mb-4 col-span-4 grid grid-cols-4 just bg-red-500">
