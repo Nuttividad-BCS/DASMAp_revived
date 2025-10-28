@@ -15,7 +15,7 @@ export default function HistoryList() {
     const [models, setModels] = useState<ActiveModel[]>([])
 
     useEffect(() => {
-  
+      
     const loadModels = async () => {
       const fetchedModels = await FetchModels()
       setModels(fetchedModels)

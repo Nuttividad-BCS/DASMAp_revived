@@ -46,6 +46,30 @@ export const Route = createFileRoute("/")({
   component: App,
 })
 
+export const barangayAlias: Record<string, string | Array<string>> = {
+      "BUROL": "Burol_Main",
+      "H-II": "H2",
+      "SAN ISIDRO LABRADOR I": "San_IL_I",
+      "SAN ISIDRO LABRADOR II": "San_IL_II",
+      "SAN ESTEBAN (BARANGAY IV)": "Santo_Estoban",
+      "EMMANUEL BERGADO I": "Emannuel_Bergado_I",
+      "EMMANUEL BERGADO II": "Emannuel_Bergado_II",
+      "SAINT PETER I": "St_Peter_I",
+      "SAINT PETER II": "St_Peter_II",
+      "SAN NICOLAS I": "San_Nicholas_I",
+      "SAN NICOLAS II": "San_Nicholas_II",
+      "SAN MIGUEL": "San_Miguel_I",
+      "SANTO NIÑO I": "Santo_Nino_I",
+      "SANTO NIÑO II": "Santo_Nino_II",
+      "SAN LORENZO RUIZ I": "San_Lorenzo_Ruis_I",
+      "ZONE I-B": "Zone_I",
+      "ZONE I": "Zone_IA",
+      "FATIMA I": "Fatima_I",
+      "SANTA FE": "Santa_Fe",
+      "SAN SIMON": "San_Simon",
+      "SAN FRANCISCO II": "San_Francisco_II"
+}
+
 export default function App() {
   const [activeModel, setActiveModel] = useState<ActiveModel | null>(null)
   const [ mapOn, setMapOn ] = useState(false)
@@ -56,8 +80,8 @@ export default function App() {
   const brgyRef = useRef<RefStruct>({})
   const currentYear = new Date().getFullYear()
   const years = Array.from({ length: currentYear - 2010 + 1 }, (_, i) => 2010 + i)
-  const [ year_s, setYear ] = useState(currentYear.toString())
-  const [ month_s, setMonth] = useState("1")
+  const [month_s, setMonth] = useState<string>("")
+  const [year_s, setYear] = useState<string>("")
   const [ pred, setPred ] = useState<any[]>([])
 
   //Reset Cam on Click
@@ -116,52 +140,78 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    const allRegions = document.querySelectorAll("path");
+
+    // If month_s or year_s is not set, shade all gray and exit
+    if (!month_s || !year_s) {
+      allRegions.forEach(region => {
+        region.style.fill = "#6B6B6B";
+      });
+    return;
+  }
+
     const fetchPredictions = async () => {
-        const response = await fetch("https://dasmaprevived-production.up.railway.app/predict", {
+      const response = await fetch("https://dasmaprevived-production.up.railway.app/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ year: parseInt(year_s), month: parseInt(month_s)}),
-        })
-        const data = await response.json()
-        
-        setPred(data)
-      }
-      fetchPredictions()
-    
-  const minCases = Math.min(...pred.map(p => p.Predicted_Cases))
-  const maxCases = Math.max(...pred.map(p => p.Predicted_Cases))
+        body: JSON.stringify({ year: parseInt(year_s), month: parseInt(month_s) }),
+      });
 
-  function getColor(intensity: number) {
-    const r = 255
-    const g = Math.round(204 - 204 * intensity)
-    const b = Math.round(204 - 204 * intensity)
-    return `rgb(${r},${g},${b})`
-  }
+      const data = await response.json();
+      setPred(data)
+    };
 
-  // helper to match SVG id format
-  function normalizeBarangay(name: string) {
-    return (
-      name
-        .toLowerCase()
-        .replace(/\s+/g, "_") // replace spaces with underscores
-        .replace(/\./g, "")   // remove dots
-        .replace(/ñ/g, "n")   // normalize characters
-        .replace(/\b\w/g, c => c.toUpperCase()) // capitalize words
-    )
-  }
+    fetchPredictions();
+  }, [month_s, year_s]);
 
-  pred.forEach(p => {
-    const intensity = (p.Predicted_Cases - minCases) / (maxCases - minCases)
-    const id = normalizeBarangay(p.BARANGAY)
-    const region = document.getElementById(id)
-    if (region) {
-      region.style.fill = getColor(intensity)
-    } else {
-      console.warn(`No matching region for ${p.BARANGAY} (${id})`)
+  useEffect(() => {
+    if (pred.length === 0) return;
+
+    const minCases = Math.min(...pred.map(p => p.Predicted_Cases));
+    const maxCases = Math.max(...pred.map(p => p.Predicted_Cases));
+
+    function getColor(intensity: number) {
+      const r = 255;
+      const g = Math.round(204 - 204 * intensity);
+      const b = Math.round(204 - 204 * intensity);
+      return `rgb(${r},${g},${b})`;
     }
-  })
-  },[month_s, year_s])
 
+    function normalizeBarangay(name: string) {
+      name = name.replace(/\s*\(.*?\)\s*/g, "");
+      let formatted = name.toLowerCase().replace(/\s+/g, "_");
+      formatted = formatted
+        .split("_")
+        .map(word => (/^(i|ii|iii|iv|v|vi|vii|viii|ix|x)$/i.test(word)
+          ? word.toUpperCase()
+          : word.charAt(0).toUpperCase() + word.slice(1)))
+        .join("_");
+      return formatted;
+    }
+
+    // Reset all first to gray before recoloring
+    const allRegions = document.querySelectorAll("path");
+    allRegions.forEach(region => {
+      region.style.fill = "#6B6B6B";
+    });
+
+    pred.forEach(p => {
+      const normalized = barangayAlias[p.BARANGAY] || normalizeBarangay(p.BARANGAY);
+      const region = document.getElementById(normalized);
+
+      const intensity = (p.Predicted_Cases - minCases) / (maxCases - minCases);
+      const id = normalizeBarangay(p.BARANGAY);
+
+      if (region) {
+        region.style.fill = getColor(intensity);
+      } else {
+        console.warn(`No matching region for ${p.BARANGAY} (${id})`);
+      }
+    });
+  }, [pred]);
+
+
+  
     return (
 
     <SideBar
@@ -187,41 +237,48 @@ export default function App() {
             </CardHeader>
             <CardContent className="grid pb-0 h-full w-full">
                 <div className="col-span-1 lg:col-span-8 grid grid-cols-4 lg:grid-cols-8 gap-3 lg:gap-5 mb-3 font-[Formula] items-center">
-                            <Lbl className="lg:col-span-2 text-xl">Year:</Lbl>
-                            <Select value={year_s} onValueChange={setYear}>
-                                <SelectTrigger className="w-full col-span-3 lg:col-span-6">
-                                    <SelectValue placeholder="Select a Year" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                    <SelectLabel>Year</SelectLabel>
-                                    {years.map((year) => (
-                                        <SelectItem key={year} value={year.toString()}>
-                                        {year}
-                                        </SelectItem>
-                                    ))}
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-                            <Lbl className="lg:col-span-2 text-xl lg:justify-self-end">Month:</Lbl>
-                            <Select value={month_s} onValueChange={setMonth}>
-                            <SelectTrigger className="w-full col-span-3 lg:col-span-6">
-                                <SelectValue placeholder="Select a Month" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                {months.map((month, index) => (
-                                    <SelectItem key={index + 1} value={(index + 1).toString()}>
-                                    {month}
-                                    </SelectItem>
-                                ))}
-                                </SelectGroup>
-                            </SelectContent>
-                            </Select>
+                  <Lbl className="lg:col-span-2 text-xl">Year:</Lbl>
+                  <Select value={year_s} onValueChange={setYear}>
+                      <SelectTrigger className="w-full col-span-3 lg:col-span-6">
+                          <SelectValue placeholder="Select a Year" />
+                      </SelectTrigger>
+                      <SelectContent>
+                          <SelectGroup>
+                          <SelectLabel>Year</SelectLabel>
+                          {years.map((year) => (
+                              <SelectItem key={year} value={year.toString()}>
+                              {year}
+                              </SelectItem>
+                          ))}
+                          </SelectGroup>
+                      </SelectContent>
+                  </Select>
+                  <Lbl className="lg:col-span-2 text-xl lg:justify-self-end">Month:</Lbl>
+                  <Select value={month_s} onValueChange={setMonth}>
+                  <SelectTrigger className="w-full col-span-3 lg:col-span-6">
+                      <SelectValue placeholder="Select a Month" />
+                  </SelectTrigger>
+                  <SelectContent>
+                      <SelectGroup>
+                      {months.map((month, index) => (
+                          <SelectItem key={index + 1} value={(index + 1).toString()}>
+                          {month}
+                          </SelectItem>
+                      ))}
+                      </SelectGroup>
+                  </SelectContent>
+                  </Select>
                 </div>
             </CardContent>
             <CardFooter className="flex-col gap-3 text-sm">
-                
+                <Button onClick={() => {
+                  setYear("") 
+                  setMonth("")
+                  setPred([])
+                }
+                }>
+                  Heatmap Off
+                </Button>
             </CardFooter>
         </Card>
         </div>
@@ -248,31 +305,32 @@ export default function App() {
         <Label className="text-gray-600 font-[Formula]">Confidence Level: {activeModel ? `${(activeModel.model_acc * 100).toFixed(2)}%` : "Loading..."}</Label>
         <Label className="text-gray-600 font-[Formula]">Last Model Update: January 1, 2025</Label>
   
-        {mapOn && (
-          <div className="h-screen w-full">
-            <Canvas 
-              shadows 
-              camera={{ position: [0, 5, 15], fov: 50 }} 
-              frameloop="always" dpr={[0.6,1]}>
-              <AdaptiveDpr pixelated />
-              <ambientLight intensity={0.7} />
-              <directionalLight position={[20, 5, 10]} intensity={0.8} />
-              <Suspense fallback={null}>
-                <PerspectiveCamera makeDefault position={[10, 15, 10]} />
-                <DasMap
-                  activeBarangay={activeBarangay}
-                  targetPosition={targetPosition as [number, number, number]}
-                  handleClick={handleClick}
-                  handleHover={handleHover}
-                  brgyRef={brgyRef}
-                  onHover={setHoveredBrgy}
-                  rotate={autorotate}
-                />
-                <gridHelper args={[1000, 100, "white", "gray"]} />
-              </Suspense>
-            </Canvas>
-          </div>
-        )}
+        {/*
+        <div className={`h-screen w-full`}>
+          <Canvas 
+            style={{ display: mapOn ? "block" : "none" }}
+            shadows 
+            camera={{ position: [0, 5, 15], fov: 50 }} 
+            frameloop="always" dpr={[0.6,1]}>
+            <AdaptiveDpr pixelated />
+            <ambientLight intensity={0.7} />
+            <directionalLight position={[20, 5, 10]} intensity={0.8} />
+            <Suspense fallback={null}>
+              <PerspectiveCamera makeDefault position={[10, 15, 10]} />
+              <DasMap
+                activeBarangay={activeBarangay}
+                targetPosition={targetPosition as [number, number, number]}
+                handleClick={handleClick}
+                handleHover={handleHover}
+                brgyRef={brgyRef}
+                onHover={setHoveredBrgy}
+                rotate={autorotate}
+              />
+              <gridHelper args={[1000, 100, "white", "gray"]} />
+            </Suspense>
+          </Canvas>
+        </div>
+    */}
 
 
         {!mapOn && (
@@ -298,7 +356,7 @@ export default function App() {
           {hoveredBrgy?.split("_").join(" ")}
         </div>
       </div>
-      <DashBoard handleClick={handleClick} activeBarangay={activeBarangay} mapOn={mapOn}/>
+      <DashBoard handleClick={handleClick} activeBarangay={activeBarangay} mapOn={mapOn} pred={pred}/>
     </SideBar>
   )
 }

@@ -24,7 +24,7 @@ export interface MapActions {
 }
 
 function MoveCam({ target, active, targetPosition }: MoveCamProps) {
-  const { camera} = useThree()
+  const { camera } = useThree()
   const startPos = useRef(new THREE.Vector3())
   const controlPos = useRef(new THREE.Vector3())
   const endPos = useRef(new THREE.Vector3())

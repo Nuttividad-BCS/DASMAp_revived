@@ -1,4 +1,4 @@
-import Map2D from "./svgs/Final_Map.svg?react"
+import Map2D from "./svgs/Frame2.svg?react"
 import { TransformWrapper, TransformComponent, useControls } from "react-zoom-pan-pinch"
 import { useEffect } from "react"
 
@@ -56,7 +56,6 @@ export const DasMap2D: React.FC<MapActions2D> = ({
                 onClick={(e) => {
                   const target = e.target as SVGElement
 
-                    console.log(target.id)
                     handleClick(target.id)
 
                 }}
