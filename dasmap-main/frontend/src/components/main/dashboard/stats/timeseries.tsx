@@ -1,7 +1,7 @@
 "use client"
 
 import { TrendingUp } from "lucide-react"
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis} from "recharts"
 
 import {
   Card,
@@ -17,34 +17,71 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+import { months } from "@/components/admin/dash/batch_predict"
 
-export const description = "An area chart with gradient fill"
+interface TooltipProps {
+  active?: boolean;
+  payload?: any[];
+  label?: number;
+}
 
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-]
+interface PredictedItem {
+  BARANGAY: string
+  Predicted_Cases: number
+  MONTH: number
+  YEAR: number
+  Risk_Level: string
+}
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "var(--chart-1)",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
-  },
-} satisfies ChartConfig
+interface PredYearProps {
+  predictedYear: Array<PredictedItem> | null
+}
 
-export default function TimeSeries() {
+export function ChartTooltipC({ active, payload, label }: TooltipProps) {
+  if (!active || !payload || payload.length === 0) return null;
+
+  const data = payload[0]?.payload; // Access the full data object for the month
+
+  return (
+    <div className="bg-[#1D2129] p-2 rounded-md border border-gray-600 text-white text-sm shadow-lg">
+      <div className="font-bold mb-1">
+        {months[(label as number) - 1]} {/* Month name */}
+      </div>
+      <div className="flex justify-between gap-2">
+        <span>Predicted Cases: </span>
+        <span>{data?.predicted}</span>
+      </div>
+      <div className="flex justify-between gap-2">
+        <span>Severity Level:</span>
+        <span>{data?.risk_level}</span>
+      </div>
+    </div>
+  );
+}
+
+export default function TimeSeries({predictedYear} : PredYearProps) {
+  const chartData = predictedYear?.map(e => ({
+    year: e.YEAR,
+    month: e.MONTH,
+    predicted: e.Predicted_Cases,
+    risk_level: e.Risk_Level
+  })) || []
+
+  const chartConfig = {
+    month: {
+      label: "Month",
+      color: "var(--chart-1)",
+    },
+    predicted: {
+      label: "Cases",
+      color: "var(--chart-2)",
+    },
+  } satisfies ChartConfig
+
   return (
     <Card className="flex flex-col col-span-1 lg:col-span-6 bg-[#282c34] border-[#3d4452] text-white ring-0 ring-red-400 hover:ring-3 transition ease-in-out">
       <CardHeader>
-        <CardTitle>Dengue Prediction Forecast for Year: {0} </CardTitle>
+        <CardTitle>Dengue Prediction Forecast for Year: {predictedYear?.[0]?.YEAR ?? "undefined"} </CardTitle>
         <CardDescription>
           Forecasted changes in dengue cases across the selected year
         </CardDescription>
@@ -60,14 +97,29 @@ export default function TimeSeries() {
             }}
           >
             <CartesianGrid vertical={false} />
+            <YAxis
+              type="number"
+              domain={[0, 20]}         
+              tickCount={6}            
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              label={{
+                value: "Cases",
+                angle: -90,
+                position: "insideLeft",
+                offset: 10,
+                style: { textAnchor: "middle", fill: "white", fontSize: 12 },
+              }}
+            />
             <XAxis
               dataKey="month"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => months[value - 1].slice(0, 3)}
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <ChartTooltip cursor={false} content={<ChartTooltipC />} />
             <defs>
               <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
                 <stop
@@ -81,29 +133,9 @@ export default function TimeSeries() {
                   stopOpacity={0.1}
                 />
               </linearGradient>
-              <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-mobile)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-mobile)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
             </defs>
             <Area
-              dataKey="mobile"
-              type="natural"
-              fill="url(#fillMobile)"
-              fillOpacity={0.4}
-              stroke="var(--color-mobile)"
-              stackId="a"
-            />
-            <Area
-              dataKey="desktop"
+              dataKey="predicted"
               type="natural"
               fill="url(#fillDesktop)"
               fillOpacity={0.4}

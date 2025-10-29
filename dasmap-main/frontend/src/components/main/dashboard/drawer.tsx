@@ -45,13 +45,15 @@ interface DashProps {
   activeBarangay: string
   mapOn : boolean
   pred: Array<Prediction>
+  predYear: Array<Prediction>
 }
 
 export const DashBoard: React.FC<DashProps> = ({
     handleClick,
     activeBarangay,
     mapOn,
-    pred
+    pred,
+    predYear
 }) => {
     const months = [
     "January",
@@ -75,13 +77,6 @@ export const DashBoard: React.FC<DashProps> = ({
     const [ popu, setPopu ] = useState(0)
     const [ pc, setPc] = useState("")
     const [ coord, setCoord ] = useState([0,0])
-    
-    const loadCsv = async () => {
-        const response = await fetch("/test_data.csv"); // fetch from /public/data.csv
-        const text = await response.text()
-        const parsed = Papa.parse(text, { header: true })
-        return parsed.data as any[]   
-    }
 
     useEffect(() => {
         if (activeBarangay == null || activeBarangay == "") {
@@ -102,19 +97,6 @@ export const DashBoard: React.FC<DashProps> = ({
             return () => clearTimeout(delay)
         }
     }, [activeBarangay, mapOn])
-
-
-    function normalizeBarangay(name: string) {
-      name = name.replace(/\s*\(.*?\)\s*/g, "");
-      let formatted = name.toLowerCase().replace(/\s+/g, "_");
-      formatted = formatted
-        .split("_")
-        .map(word => (/^(i|ii|iii|iv|v|vi|vii|viii|ix|x)$/i.test(word)
-          ? word.toUpperCase()
-          : word.charAt(0).toUpperCase() + word.slice(1)))
-        .join("_");
-      return formatted;
-    }
 
     const reverseBarangayAlias: Record<string, string> = Object.entries(barangayAlias).reduce(
         (acc, [key, value]) => {
@@ -177,15 +159,15 @@ export const DashBoard: React.FC<DashProps> = ({
                             </DrawerTitle>
                         </div>
                         <div className="col-span-1 lg:col-span-8 text-white grid grid-cols-4 lg:grid-cols-6 gap-3 lg:gap-5 mb-3 justify-self-center">
-                            <Lbl className="lg:col-span-3 text-xl">Predictions For</Lbl>
-                            <Lbl className="lg:col-span-3 text-xl">{`${activePrediction?.MONTH ? months[activePrediction.MONTH- 1] : ""} ${activePrediction?.YEAR}`}</Lbl>
+                            <Lbl className="col-span-2 lg:col-span-3 text-xl">Predictions For</Lbl>
+                            <Lbl className="col-span-2 lg:col-span-3 text-xl">{`${activePrediction?.MONTH ? months[activePrediction.MONTH- 1] : ""} ${activePrediction?.YEAR}`}</Lbl>
                         </div>
                         <DrawerDescription className="col-span-1 lg:col-span-8 lg:justify-self-center mt-4">Dashboard Overview and Model Predictions</DrawerDescription>
                     </DrawerHeader>
                     
                     <div className="grid grid-cols-1 lg:grid-cols-8 gap-5 ">
                         <CaseCount predicted={activePrediction} year={activePrediction?.YEAR} month={activePrediction?.MONTH ? months[activePrediction.MONTH - 1] : ""}/>
-                        <TimeSeries />
+                        <TimeSeries predictedYear={predYear}/>
                     </div>
                     {/*<SeverityClass risklevel={riskLvl} year={year} month={month ? months[parseInt(month) - 1] : ""}/>
                     <RecovChart year={year} month={month ? months[parseInt(month) - 1] : ""}/>
