@@ -44,9 +44,9 @@ export default function TimeSeries() {
   return (
     <Card className="flex flex-col col-span-1 lg:col-span-6 bg-[#282c34] border-[#3d4452] text-white ring-0 ring-red-400 hover:ring-3 transition ease-in-out">
       <CardHeader>
-        <CardTitle>Area Chart - Gradient</CardTitle>
+        <CardTitle>Dengue Prediction Forecast for Year: {0} </CardTitle>
         <CardDescription>
-          Showing total visitors for the last 6 months
+          Forecasted changes in dengue cases across the selected year
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -120,7 +120,7 @@ export default function TimeSeries() {
               Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
             </div>
             <div className="text-muted-foreground flex items-center gap-2 leading-none">
-              January - June 2024
+              January - December 
             </div>
           </div>
         </div>

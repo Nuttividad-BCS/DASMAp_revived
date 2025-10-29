@@ -67,7 +67,14 @@ export const barangayAlias: Record<string, string | Array<string>> = {
       "FATIMA I": "Fatima_I",
       "SANTA FE": "Santa_Fe",
       "SAN SIMON": "San_Simon",
-      "SAN FRANCISCO II": "San_Francisco_II"
+      "SAN FRANCISCO II": "San_Francisco_II",
+      "SAN ROQUE (STA. CRISTINA II)": "San_Roque",
+      "SAN SIMON (BARANGAY 7)": "San_Simon",
+      "SAN DIONISIO (BARANGAY I)": "San_Dionisio",
+      "SANTA MARIA (BARANGAY 20)": "Santa_Maria",
+      "SAN JUAN (SAN JUAN I)": "San_Juan",
+      "SANTA LUCIA (SAN JUAN II)": "Santa_Lucia",
+      "SANTO CRISTO (BARANGAY III)": "Santo_Cristo"
 }
 
 export default function App() {
@@ -83,6 +90,7 @@ export default function App() {
   const [month_s, setMonth] = useState<string>("")
   const [year_s, setYear] = useState<string>("")
   const [ pred, setPred ] = useState<any[]>([])
+  const [ predYear, setPredYear ] = useState<any[]>([])
 
   //Reset Cam on Click
   const resetCamera = () => {
@@ -155,29 +163,43 @@ export default function App() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ year: parseInt(year_s), month: parseInt(month_s) }),
-      });
+      })
 
       const data = await response.json();
       setPred(data)
-    };
+    }
 
-    fetchPredictions();
-  }, [month_s, year_s]);
+  
+    fetchPredictions()
+  }, [month_s, year_s])
+
+  useEffect(() => {
+    const fetchPredictions = async () => {
+      const response = await fetch("https://dasmaprevived-production.up.railway.app/predict_year", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ year: parseInt(year_s), activeBarangay: activeBarangay }),
+      })
+
+      const data = await response.json();
+      console.log(data)
+      setPredYear(data)
+    }
+
+    fetchPredictions()
+  }, [activeBarangay, year_s])
 
   useEffect(() => {
     if (pred.length === 0) return;
 
-    const minCases = Math.min(...pred.map(p => p.Predicted_Cases));
-    const maxCases = Math.max(...pred.map(p => p.Predicted_Cases));
+    // --- CONFIG ---
+    const MAX_COLOR_CASES = 8
 
     function getColor(cases: number) {
-      const intensity = Math.min(cases / 2, 1);
-
-      // Scale color from light pink to red
+      const intensity = Math.min(cases / MAX_COLOR_CASES, 1); // fixed, not dynamic
       const r = 255;
       const g = Math.round(204 - 204 * intensity);
       const b = Math.round(204 - 204 * intensity);
-
       return `rgb(${r}, ${g}, ${b})`;
     }
 
@@ -186,36 +208,34 @@ export default function App() {
       let formatted = name.toLowerCase().replace(/\s+/g, "_");
       formatted = formatted
         .split("_")
-        .map(word => (/^(i|ii|iii|iv|v|vi|vii|viii|ix|x)$/i.test(word)
-          ? word.toUpperCase()
-          : word.charAt(0).toUpperCase() + word.slice(1)))
+        .map(word =>
+          /^(i|ii|iii|iv|v|vi|vii|viii|ix|x)$/i.test(word)
+            ? word.toUpperCase()
+            : word.charAt(0).toUpperCase() + word.slice(1)
+        )
         .join("_");
       return formatted;
     }
 
-    // Reset all first to gray before recoloring
+    // Reset all regions first to gray
     const allRegions = document.querySelectorAll("path");
     allRegions.forEach(region => {
       region.style.fill = "#6B6B6B";
     });
 
+    // Apply static color scaling
     pred.forEach(p => {
       const normalized = barangayAlias[p.BARANGAY] || normalizeBarangay(p.BARANGAY);
       const region = document.getElementById(normalized);
 
-      const intensity = (p.Predicted_Cases - minCases) / (maxCases - minCases);
-      const id = normalizeBarangay(p.BARANGAY);
-
       if (region) {
-        region.style.fill = getColor(intensity);
+        region.style.fill = getColor(p.Predicted_Cases)
       } else {
-        console.warn(`No matching region for ${p.BARANGAY} (${id})`);
+        console.warn(`No matching region for ${p.BARANGAY} (${normalized})`);
       }
     });
   }, [pred]);
 
-
-  
     return (
 
     <SideBar

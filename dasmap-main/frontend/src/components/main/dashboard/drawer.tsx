@@ -25,7 +25,6 @@ import React from "react"
 import RecovChart from "@/components/main/dashboard/stats/recovery"
 import MortalChart from "@/components/main/dashboard/stats/mortality"
 import RadarRatio from "@/components/main/dashboard/stats/RMratio"
-import SeverityClass from "@/components/main/dashboard/stats/severity"
 import TimeSeries from "@/components/main/dashboard/stats/timeseries"
 import CaseCount from "@/components/main/dashboard/stats/cases"
 import { Label } from "recharts"
@@ -91,7 +90,7 @@ export const DashBoard: React.FC<DashProps> = ({
             setPc("")
             setCoord([0,0])
         } else {
-            const delay = setTimeout(() => {setOpen(true)}, mapOn ? 2000 : 1000)
+            const delay = setTimeout(() => {setOpen(true)}, mapOn ? 500 : 500)
             const current = BrgyMeshInfo.find(e => e.name === activeBarangay)
 
             if (current && current.coordinates) {
@@ -191,8 +190,7 @@ export const DashBoard: React.FC<DashProps> = ({
                     {/*<SeverityClass risklevel={riskLvl} year={year} month={month ? months[parseInt(month) - 1] : ""}/>
                     <RecovChart year={year} month={month ? months[parseInt(month) - 1] : ""}/>
                     <MortalChart year={year} month={month ? months[parseInt(month) - 1] : ""}/>
-                    <RadarRatio />
-                    <TimeSeries />*/}
+                    <RadarRatio />*/}
                 </div>
             </DrawerContent>
         </Drawer>
