@@ -24,8 +24,8 @@ model_name = response.data['model_name']
 
 bucket_name = "models"  # adjust if nested
 model_path = f"versions/{model_name}"  # match your storage structure
-config_path = f"versions/dengue_config.json"
-historical_cases_path = f"main_merged/historical_data.csv"
+config_path = f"versions/dengue_config_v2.json"
+historical_cases_path = f"main_merged/historical_data_v2.csv"
 
 active_model = supabase.storage.from_(bucket_name).get_public_url(model_path)
 model_config = supabase.storage.from_(bucket_name).get_public_url(config_path)
@@ -121,6 +121,7 @@ def run_batch_prediction(target_year: int, target_month: int, shared_weather=Non
     risk_order = {'High': -1, 'Medium': 1, 'Low': 2}
     results['Risk_Sort'] = results['Risk_Level'].map(risk_order)
     results = results.sort_values(['Risk_Sort', 'Predicted_Cases'], ascending=[True, False]).drop('Risk_Sort', axis=1)
-
+    print(results)
     return results
 
+run_batch_prediction(2024, 1)

@@ -9,8 +9,16 @@
         "WIND_DIRECTION",
         "RH",
         "TAVG",
-        "Cases_Lagged",
-        "Cases_Rolling_Avg_3M"
+        "Cases_Lag_1",
+        "Cases_Lag_2",
+        "Cases_Lag_3",
+        "Cases_Lag_6",
+        "Cases_Lag_12",
+        "Cases_Lag_24",
+        "Cases_Rolling_Avg_3M",
+        "Cases_Rolling_Avg_6M",
+        "Cases_Rolling_Avg_12M",
+        "Cases_Rolling_Avg_24M"
     ],
     "monthly_thresholds": {
         "low_max": 2,

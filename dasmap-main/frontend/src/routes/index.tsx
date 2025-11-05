@@ -41,7 +41,6 @@ import * as THREE from "three"
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import Header from '../components/main/Header'
 import { Bug } from "lucide-react"
-import Terms from "@/components/main/terms"
 import TopFive from "@/components/main/outerStats/topfive"
 import { GetActiveModel } from "@/queries/getActiveModel"
 import { ActiveModel } from "@/components/admin/dash/acc"
@@ -289,9 +288,6 @@ export default function App() {
         <Header />
         <div className="fixed top-2 left-2 z-50">
           <SidebarTrigger />
-        </div>
-        <div className="fixed top-[20%] left-[5%] lg:top-[15%] lg:left-[20%] z-50 w-[90vw] lg:w-[60vw]">
-          <Terms />
         </div>
         <div className="fixed bottom-15 left-1/2 z-50 lg:hidden -translate-x-1/2">
           <Button
