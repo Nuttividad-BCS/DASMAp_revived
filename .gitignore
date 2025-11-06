@@ -11,4 +11,5 @@ myvenv/
 .vite
 .DS_Store
 Thumbs.db
-.env.local/
+.env.local
+.vite/deps/
