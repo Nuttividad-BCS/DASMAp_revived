@@ -75,7 +75,7 @@ export default function CaseCount({predicted,year,month} : PredCasesProps) {
                           y={(viewBox.cy || 0) - 16}
                           className="fill-foreground text-2xl fill-white font-bold"
                         >
-                          {predicted?.Predicted_Cases.toLocaleString()}
+                          {Math.floor(totalCases).toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
