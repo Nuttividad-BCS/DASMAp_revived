@@ -106,13 +106,21 @@ export default function CaseCount({predicted,year,month} : PredCasesProps) {
             }} className="relative w-3 h-3 col-span-2">
             <span className="absolute inset-0 rounded-full border-2 border-current"></span>
             <span className="absolute inset-1 rounded-full bg-transparent"></span>
-            <span className="absolute inset-0 ml-4">{predicted?.Risk_Level}</span>
+            <span className="absolute inset-0 ml-4">
+            {predicted?.Predicted_Cases !== undefined
+              ? Number(predicted.Predicted_Cases) > 7
+                ? "High"
+                : Number(predicted.Predicted_Cases) > 3
+                ? "Medium"
+                : "Low"
+              : "-"}
+          </span>
           </span> 
         </Lbl>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 leading-none font-medium mb-5">
-          Trending up by n% this month <TrendingUp className="h-4 w-4" />
+          Month of {month} <TrendingUp className="h-4 w-4" />
         </div>
       </CardFooter>
     </Card>

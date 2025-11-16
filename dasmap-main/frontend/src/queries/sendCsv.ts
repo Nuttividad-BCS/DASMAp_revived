@@ -1,44 +1,86 @@
-import { supabase } from '@/makeclient.ts'
-import { toast } from 'sonner'
+import { supabase } from "@/makeclient"
+import { toast } from "sonner"
 
-async function SendCsv(csv: File) {
-    const {data, error } = await supabase.storage
-    .from('models')
-    .upload(`csvs/${csv.name}`, csv, {
+interface ModelDeets {
+  model_name: string
+  model_acc: number
+  date_created: string
+  model_size: number
+}
+
+interface SendCsvPayload extends ModelDeets {
+  file: File
+}
+
+export default async function SendCsv(payload: SendCsvPayload) {
+  const { file, model_name, model_acc, date_created, model_size } = payload
+
+  // -----------------------------
+  // 1. Upload CSV to storage
+  // -----------------------------
+  const { data: uploadData, error: uploadError } = await supabase.storage
+    .from("models")
+    .upload(`csvs/${file.name}`, file, {
       cacheControl: "3600",
       upsert: false,
     })
 
-    if (error) {
-        toast(`Error Uploading file: ${error}`)
-    }
+  if (uploadError) {
+    toast(`❌ Error uploading file: ${uploadError.message}`)
+    return
+  }
 
-    toast('File Uploaded Successfully')
+  // -----------------------------
+  // 2. Get public file URL
+  // -----------------------------
+  const { data: publicUrlData } = supabase.storage
+    .from("models")
+    .getPublicUrl(`csvs/${file.name}`)
 
-    const { data: publicUrlData } = supabase.storage
-    .from('models')
-    .getPublicUrl(`csvs/${csv.name}`)
+  const fileUrl = publicUrlData.publicUrl
 
-    const publicUrl = publicUrlData.publicUrl
+  // -----------------------------
+  // 3. Insert CSV log into CsvLog
+  // -----------------------------
+  const { error: insertCsvError } = await supabase
+    .from("CsvLog")
+    .insert([
+      {
+        file_name: file.name,
+        file_url: fileUrl,
+      },
+    ])
 
-    // ✅ Insert file metadata into a Supabase table (e.g. "model_files")
-    const { error: insertError } = await supabase
-        .from('CsvLog') // your table name
-        .insert([
-        {
-            file_name: csv.name,
-            file_url: publicUrl,
-        },
-        ])
+  if (insertCsvError) {
+    toast(`❌ Error saving CSV metadata: ${insertCsvError.message}`)
+    return
+  }
 
-    if (insertError) {
-        toast(`Error saving metadata: ${insertError.message}`)
-        return
-    }
+  // -----------------------------
+  // 4. Insert MODEL DETAILS into Models table
+  // -----------------------------
+  const { error: modelError } = await supabase
+    .from("Models")
+    .insert([
+      {
+        model_name,
+        model_acc,
+        date_created,
+        model_size,
+        file_url: fileUrl, // optional: link the uploaded file to the model
+      },
+    ])
 
-    toast('✅ File uploaded and metadata saved successfully!')
-    return { uploadData: data, fileUrl: publicUrl }
-    
+  if (modelError) {
+    toast(`❌ Error saving model details: ${modelError.message}`)
+    return
+  }
+
+  toast("✅ File + Model details uploaded successfully!")
+
+  // Return everything
+  return {
+    fileUrl,
+    uploadData,
+  }
 }
-
-export default SendCsv

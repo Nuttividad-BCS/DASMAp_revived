@@ -38,95 +38,74 @@ interface ModelFormValues {
 export default function DropZone() {
     const { register, handleSubmit, reset } = useForm<ModelFormValues>()
     const [open, setOpen] = useState(false)
-    const [open_m, setOpen_m] = useState(false)
     const [files, setFiles] = useState<File[] | undefined>()
-    const [files_model, setFiles_model] = useState<File[] | undefined>()   
 
     const handleDrop = (files: File[]) => {
         setFiles(files)
     }
 
-    const handleDrop_model = (files_model: File[]) => {
-        setFiles_model(files_model)
-    }
+    const submitAll = async (data: ModelFormValues) => {
+        if (!files?.[0]) {
+        toast("Please select a CSV file")
+        return
+        }
 
-    const send_model = async(data:ModelFormValues) => {
+        await SendCsv({
+        file: files[0],
+        ...data,
+        })
 
-        // Send model details to Supabase
-        await SendModelDeets({
-            model_name: data.model_name,
-            model_acc: data.model_acc,
-            date_created: data.date_created,
-            model_size: data.model_size,
-        });
-
-        // Optionally, upload .pkl file here with SendCsv
-        if (files_model?.[0]) await SendModel(files_model[0])
-
-        setOpen_m(false)
         reset()
+        setFiles([])
+        setOpen(false)
     }
-
 
     function HandleUpload() {
 
     return (
         <Dialog onOpenChange={setOpen} open={open}>
             <DialogContent>
-                <DialogTitle>Confirm Upload of Csv File: {files?.[0].name}?</DialogTitle>
-                <DialogDescription>Please Confirm Below.</DialogDescription>
-                <Button onClick={async () => {
-                    await SendCsv(files?.[0]!)
-                    setOpen(false)
-                }}>
-                    Yes
-                </Button>
-                <Button onClick={() => {setOpen(false)}}>
-                    No
-                </Button>
+                <DialogTitle>Upload CSV File</DialogTitle>
+                <DialogDescription>
+                Please fill out the details and select a file to upload.
+                </DialogDescription>
+
+                <form onSubmit={handleSubmit(submitAll)} className="grid gap-5 mt-2">
+                <div>
+                    <Label className="mb-2">CSV Name</Label>
+                    <Input type="text" {...register("model_name", { required: true })} />
+                </div>
+
+                <div>
+                    <Label className="mb-2">CSV Accuracy (0-1)</Label>
+                    <Input
+                    type="number"
+                    step="0.01"
+                    {...register("model_acc", { required: true, min: 0, max: 1 })}
+                    />
+                </div>
+
+                <div>
+                    <Label className="mb-2">Date Created</Label>
+                    <Input type="date" {...register("date_created", { required: true })} />
+                </div>
+
+                <div>
+                    <Label className="mb-2">CSV Size (MB)</Label>
+                    <Input
+                    type="number"
+                    step="0.01"
+                    {...register("model_size", { required: true, min: 0 })}
+                    />
+                </div>
+
+                <DialogFooter className="flex justify-self-center gap-2">
+                    <Button type="submit">Upload</Button>
+                    <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+                </DialogFooter>
+                </form>
             </DialogContent>
-        </Dialog>
-    )
-    }
-
-    function HandleUpload_model() {
-
-    return (
-        <Dialog open={open_m} onOpenChange={setOpen_m}>
-        <DialogContent className="sm:max-w-[500px]">
-            <DialogHeader>
-            <DialogTitle>Upload Model: {files_model?.[0]?.name || "No File Selected"}</DialogTitle>
-            <DialogDescription>Fill out the details below and confirm upload.</DialogDescription>
-            </DialogHeader>
-
-            <form onSubmit={handleSubmit(send_model)} className="grid gap-5 mt-2">
-            <div>
-                <Label className="mb-2">Model Name</Label>
-                <Input type="text" {...register("model_name", { required: true })} />
-            </div>
-
-            <div>
-                <Label className="mb-2">Model Accuracy (0-1)</Label>
-                <Input type="number" step="0.01" {...register("model_acc", { required: true, min: 0, max: 1 })} />
-            </div>
-
-            <div>
-                <Label className="mb-2">Date Created</Label>
-                <Input type="date" {...register("date_created", { required: true })} />
-            </div>
-
-            <div>
-                <Label className="mb-2">Model Size (MB)</Label>
-                <Input type="number" step="0.01" {...register("model_size", { required: true, min: 0 })} />
-            </div>
-
-            <DialogFooter className="flex justify-end gap-2">
-                <Button type="submit">Upload</Button>
-                <Button variant="outline" onClick={() => setOpen_m(false)}>Cancel</Button>
-            </DialogFooter>
-            </form>
-        </DialogContent>
-        </Dialog>
+            </Dialog>
     )
     }
 
@@ -134,12 +113,12 @@ export default function DropZone() {
         <>
         <Card className="h-full">
             <CardHeader>
-                <CardTitle>Upload CSV/Model File for System Updation</CardTitle>
+                <CardTitle>Upload CSV File for System Updation</CardTitle>
                 <CardDescription>Please Follow the CSV Format</CardDescription>
             </CardHeader>
             <CardContent className="h-full grid grid-cols-4 gap-3 justify-center items-center">
                 <Dropzone
-                    className="h-full col-span-2 ring-1 ring-gray-400 "
+                    className="h-full col-span-4 ring-1 ring-gray-400 "
                     maxFiles={1}
                     onDrop={handleDrop}
                     onError={console.error}
@@ -148,18 +127,8 @@ export default function DropZone() {
                     <DropzoneEmptyState />
                     <DropzoneContent />
                 </Dropzone>
-                <Dropzone
-                    className="h-full col-span-2 ring-1 ring-gray-400 "
-                    maxFiles={1}
-                    onDrop={handleDrop_model}
-                    onError={console.error}
-                    src={files_model}
-                    >
-                    <DropzoneEmptyState />
-                    <DropzoneContent />
-                </Dropzone>
                 <Button
-                    className="col-span-2" 
+                    className="col-span-4" 
                     onClick={() => {
                         if (!files || files.length === 0) {
                             toast('Please upload a file first!')
@@ -170,21 +139,8 @@ export default function DropZone() {
                     }}>
                     Submit Csv
                 </Button>
-                <Button
-                    className="col-span-2" 
-                    onClick={() => {
-                        if (!files_model || files_model.length === 0) {
-                            toast('Please upload a file (pkl) first!')
-                            setOpen_m(false)
-                        } else{ 
-                            setOpen_m(true)
-                        }
-                    }}>
-                    Submit Model (.pkl)
-                </Button>
             </CardContent>
         </Card>
-        <HandleUpload_model />
         <HandleUpload />
         </>
     )

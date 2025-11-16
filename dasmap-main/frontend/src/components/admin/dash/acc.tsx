@@ -34,6 +34,7 @@ export interface ActiveModel {
   model_status?: boolean
   model_size?: number
   date_created? : Date
+  file_url?: string
 }
 
 const chartConfig = {

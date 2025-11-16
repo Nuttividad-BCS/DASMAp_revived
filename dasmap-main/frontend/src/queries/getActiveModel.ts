@@ -6,7 +6,7 @@ export async function GetActiveModel(): Promise<ActiveModel | null> {
   // Query Supabase table for the model with is_active = true
   const { data, error } = await supabase
     .from("Models") // 👈 your Supabase table name
-    .select("model_name, model_acc ,model_status")
+    .select("model_name, model_acc ,model_status, file_url")
     .eq("model_status", true)
     .single() // Expect only one true value
 

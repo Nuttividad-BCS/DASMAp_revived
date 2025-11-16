@@ -55,6 +55,7 @@ export const DashBoard: React.FC<DashProps> = ({
     pred,
     predYear
 }) => {
+    
     const months = [
     "January",
     "February",
@@ -111,9 +112,10 @@ export const DashBoard: React.FC<DashProps> = ({
 
     const activePrediction = pred.find(p => {
         const originalName = reverseBarangayAlias[activeBarangay] || activeBarangay.replace(/_/g, " ").toUpperCase()
-        return p.BARANGAY === originalName
+        
+        return p.BARANGAY_NAME === originalName
     })
-
+   
     return (
         <Drawer open={open} preventScrollRestoration={true} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
@@ -146,7 +148,7 @@ export const DashBoard: React.FC<DashProps> = ({
                                 Barangay Name: {activeBarangay.split("_").join(" ")}
                             </DrawerTitle>
                             <DrawerTitle className="col-span-1 lg:col-span-2 text-white ">
-                                Population: {popu}
+                                Estimated Population: {popu}
                             </DrawerTitle>
                             <DrawerTitle className="col-span-1 lg:col-span-2 text-white ">
                                 % to the City: {pc}

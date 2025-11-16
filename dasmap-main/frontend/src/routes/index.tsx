@@ -45,7 +45,11 @@ import TopFive from "@/components/main/outerStats/topfive"
 import { GetActiveModel } from "@/queries/getActiveModel"
 import { ActiveModel } from "@/components/admin/dash/acc"
 import { months } from "@/components/admin/dash/batch_predict"
-
+import Papa from "papaparse"
+import { brgy_lbls } from "@/components/main/brgy_Table/brgy_label"
+import { supabase } from "@/makeclient"
+import { useQuery } from "@tanstack/react-query"
+import {toast} from 'sonner'
 interface RefStruct {
   [key: string]: any
 }
@@ -126,7 +130,7 @@ export default function App() {
   const [hoveredBrgy, setHoveredBrgy] = useState<string | null>(null)
   const brgyRef = useRef<RefStruct>({})
   const currentYear = new Date().getFullYear()
-  const years = Array.from({ length: currentYear - 2010 + 1 }, (_, i) => 2010 + i)
+  const years = Array.from({ length: currentYear - 2010 + 2 }, (_, i) => 2010 + i)
   const [month_s, setMonth] = useState<string>("")
   const [year_s, setYear] = useState<string>("")
   const [ pred, setPred ] = useState<any[]>([])
@@ -206,14 +210,54 @@ export default function App() {
   }
 
     const fetchPredictions = async () => {
-      const response = await fetch("https://dasmaprevived-production.up.railway.app/predict", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ year: parseInt(year_s), month: parseInt(month_s) }),
-      })
+        const historical = supabase
+          .storage
+          .from("models") 
+          .getPublicUrl("main_merged/historical_cases.csv").data.publicUrl
 
-      const data = await response.json()
-      setPred(data)
+        if (!activeModel) {
+          toast("No active model found!")
+          return
+        }
+
+        // Get CSV URL from active model
+        const csvUrl = activeModel.file_url
+        if (!csvUrl) {
+          toast("No CSV URL available for this model")
+          return
+        }
+
+        const response = parseInt(year_s) >= 2025 ? await fetch(csvUrl) : await fetch(historical)
+        const csvText = await response.text()
+        
+
+ 
+        Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true,
+          complete: (result) => {
+            const rows = result.data
+        
+            // Convert to numbers (CSV loads them as strings)
+            const targetYear = parseInt(year_s)
+            const targetMonth = parseInt(month_s)
+    
+            // Filter records that match selected YEAR + MONTH
+            const filtered = rows.filter(row => {
+              const rowYear = Number(String(row.YEAR || row.year || row.Year).trim())
+              const rowMonth = Number(String(row.MONTH || row.month || row.Month).trim())
+
+              return rowYear === targetYear && rowMonth === targetMonth
+            })
+            
+              const labeled = filtered.map(row => ({
+                ...row,
+                BARANGAY_NAME: brgy_lbls[row.BARANGAY_ID]
+              }))
+
+              setPred(labeled) // only matching rows
+          },
+        })
     }
 
   
@@ -224,18 +268,71 @@ export default function App() {
     if (activeBarangay && year_s) {
       
       // 3. Lookup in inverted alias
-      const mapped = invertedBarangayAlias[activeBarangay]
+      const mapped = invertedBarangayAlias[activeBarangay] ?? activeBarangay
       
       const fetchPredictions = async () => {
+        if (!activeModel || !activeModel.file_url) {
+          toast("No active model CSV available")
+          return
+        }
 
-        const response = await fetch("https://dasmaprevived-production.up.railway.app/predict_year", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ year: parseInt(year_s), activeBarangay: mapped}),
-        })
+        try {
+          // Get CSV URL from active model or historical CSV depending on year
+          const csvSourceUrl =
+            parseInt(year_s) >= 2025
+              ? activeModel.file_url
+              : supabase
+                  .storage
+                  .from("models")
+                  .getPublicUrl("main_merged/historical_cases.csv").data.publicUrl
 
-        const data = await response.json();
-        setPredYear(data)
+          if (!csvSourceUrl) {
+            toast("CSV URL not found")
+            return
+          }
+
+          // Fetch CSV
+          const response = await fetch(csvSourceUrl)
+          if (!response.ok) {
+            toast("Failed to fetch CSV")
+            return
+          }
+
+          const csvText = await response.text()
+
+          // Parse CSV
+          Papa.parse(csvText, {
+            header: true,
+            skipEmptyLines: true,
+            complete: (result) => {
+              const rows = result.data
+              const targetYear = parseInt(year_s)
+
+              // Filter by year AND activeBarangay (match by name)
+              const filtered = rows.filter((row) => {
+                const rowYear = Number(String(row.YEAR || row.year || row.Year).trim())
+                const rowBarangayId = String(row.BARANGAY_ID || row.barangay_id || row.Barangay_ID).trim()
+                const rowBarangayName = brgy_lbls[rowBarangayId] || rowBarangayId // fallback
+
+                const normalizedRowName = rowBarangayName.replace(/_/g, " ").toUpperCase()
+                const normalizedMapped = mapped.replace(/_/g, " ").toUpperCase()
+
+                return rowYear === targetYear && normalizedRowName === normalizedMapped
+              })
+
+              // Add BARANGAY_NAME field for consistency
+              const labeled = filtered.map((row) => ({
+                ...row,
+                BARANGAY_NAME: brgy_lbls[row.BARANGAY_ID] || mapped, // fallback
+              }))
+
+              setPredYear(labeled) // all months for that year + barangay
+            },
+          })
+        } catch (err) {
+          console.error(err)
+          toast("Error fetching CSV data")
+        }
       }
 
       fetchPredictions()
@@ -243,10 +340,11 @@ export default function App() {
   }, [activeBarangay, year_s])
 
   useEffect(() => {
+  
     if (pred.length === 0) return;
 
     // --- CONFIG ---
-    const MAX_COLOR_CASES = 8
+    const MAX_COLOR_CASES = 32
 
     function getColor(cases: number) {
       const intensity = Math.min(cases / MAX_COLOR_CASES, 1); // fixed, not dynamic
@@ -264,13 +362,13 @@ export default function App() {
 
     // Apply static color scaling
     pred.forEach(p => {
-      const normalized = barangayAlias[p.BARANGAY] || normalizeBarangay(p.BARANGAY);
+      const normalized = barangayAlias[p.BARANGAY_NAME] || normalizeBarangay(p.BARANGAY_NAME);
       const region = document.getElementById(normalized);
 
       if (region) {
         region.style.fill = getColor(p.Predicted_Cases)
       } else {
-        console.warn(`No matching region for ${p.BARANGAY} (${normalized})`);
+        console.warn(`No matching region for ${p.BARANGAY_NAME} (${normalized})`);
       }
     });
   }, [pred]);
@@ -392,11 +490,13 @@ export default function App() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        {months.map((month: string, index: number) => (
-                          <SelectItem key={index + 1} value={(index + 1).toString()}>
-                            {month}
-                          </SelectItem>
-                        ))}
+                        {months
+                          .filter((_, index) => !(year_s === "2026" && index > 4)) // only Jan–May for 2026
+                          .map((month, index) => (
+                            <SelectItem key={index + 1} value={(index + 1).toString()}>
+                              {month}
+                            </SelectItem>
+                          ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>

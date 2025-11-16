@@ -20,11 +20,8 @@ def predict():
     year = data.get('year', 2023)
     month = data.get('month', 1)
 
-    # Optional: custom weather data from frontend
-    shared_weather = data.get('weather', None)
-
     try:
-        results = run_batch_prediction(year, month, shared_weather)
+        results = run_batch_prediction(year, month)
         return jsonify(results.to_dict(orient='records'))
     except Exception as e:
         return jsonify(error=str(e)), 500

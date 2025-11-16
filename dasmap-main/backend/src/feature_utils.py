@@ -1,62 +1,90 @@
 import pandas as pd
 import numpy as np
 
-def compute_time_features(historical_cases_df, barangay, year, month):
+
+def compute_time_features(brgy_hist, year, month, population, season_weight=1.0):
     """
-    Compute lagged and rolling features for a given barangay, year, and month.
-
-    Expected historical_cases_df columns: ['BARANGAY', 'YEAR', 'MONTH', 'Cases']
+    Recompute all time-based features exactly like in the training pipeline.
+    brgy_hist must contain: YEAR, MONTH, Cases, Trend
     """
-    # Create datetime for filtering
-    target_date = pd.to_datetime(f"{year}-{month:02d}-01")
 
-    # Filter only data before the target date
-    hist = historical_cases_df[
-        (historical_cases_df['BARANGAY'] == barangay) &
-        (pd.to_datetime(historical_cases_df[['YEAR', 'MONTH']].assign(DAY=1)) < target_date)
-    ].copy()
+    # if no history: return zeros
+    if brgy_hist.empty or 'Cases' not in brgy_hist.columns:
+        return {c: 0 for c in [
+            'Cases_Lag_1','Cases_Lag_2','Cases_Lag_3','Cases_Lag_6','Cases_Lag_12M',
+            'Cases_Rolling_Avg_3M','Cases_Rolling_Avg_6M',
+            'Trend','Month','Month_sin','Month_cos',
+            'Quarter','Quarter_sin','Quarter_cos',
+            'Day_of_Week','Is_Weekend',
+            'Cases_Pct_Change_1M','Cases_Pct_Change_3M',
+            'Cases_per_1000'
+        ]}
 
-    if hist.empty or len(hist) < 2:
-        # Not enough data, return NaNs or zeros (depending on how model trained)
-        return {
-            'Cases_Lag_1': 0.0,
-            'Cases_Lag_2': 0.0,
-            'Cases_Lag_3': 0.0,
-            'Cases_Lag_6': 0.0,
-            'Cases_Lag_12': 0.0,
-            'Cases_Lag_24': 0.0,
-            'Cases_Rolling_Avg_3M': 0.0,           
-            'Cases_Rolling_Avg_6M': 0.0,
-            'Cases_Rolling_Avg_12M': 0.0,
-            'Cases_Rolling_Avg_24M': 0.0
-        }
+    # ---------- BASIC SERIES ----------
+    last_cases = brgy_hist['Cases'].values
+    last_3 = last_cases[-3:] if len(last_cases) >= 3 else np.pad(last_cases, (3 - len(last_cases), 0))
+    last_6 = last_cases[-6:] if len(last_cases) >= 6 else np.pad(last_cases, (6 - len(last_cases), 0))
 
-    # Sort chronologically
-    hist = hist.sort_values(['YEAR', 'MONTH'])
-    hist['Cases'] = hist['Cases'].astype(float)
+    # ---------- LAG 12M (same month last year) ----------
+    last_year_same_month = brgy_hist[
+        (brgy_hist['YEAR'] == year - 1) & (brgy_hist['MONTH'] == month)
+    ]['Cases'].values
+    lag_12m = last_year_same_month[-1] if len(last_year_same_month) else 0
+    lag_12m *= season_weight
 
-    # Compute lag features
-    for lag in [1, 2, 3, 6, 12, 24]:
-        hist[f'Cases_Lag_{lag}'] = hist['Cases'].shift(lag)
+    # ---------- DIRECT LAGS ----------
+    lag_1 = (last_cases[-1] if len(last_cases) >= 1 else 0) * season_weight
+    lag_2 = (last_cases[-2] if len(last_cases) >= 2 else 0) * season_weight
+    lag_3 = (last_cases[-3] if len(last_cases) >= 3 else 0) * season_weight
+    lag_6 = last_6.mean() * season_weight
 
-    # Compute rolling averages
-    hist['Cases_Rolling_Avg_3M'] = hist['Cases'].rolling(window=3, min_periods=1).mean()
-    hist['Cases_Rolling_Avg_6M'] = hist['Cases'].rolling(window=6, min_periods=1).mean()
-    hist['Cases_Rolling_Avg_12M'] = hist['Cases'].rolling(window=12, min_periods=1).mean()
-    hist['Cases_Rolling_Avg_24M'] = hist['Cases'].rolling(window=24, min_periods=1).mean()
+    # ---------- ROLLING ----------
+    roll_3 = last_3.mean() * season_weight
+    roll_6 = last_6.mean() * season_weight
 
-    # Get last available row (most recent historical data)
-    last_row = hist.iloc[-1]
+    # ---------- TREND ----------
+    trend_val = brgy_hist['Trend'].max() + 1
+
+    # ---------- DATE FEATURES ----------
+    ts = pd.Timestamp(year=year, month=month, day=1)
+    quarter = ts.quarter
+
+    month_sin = np.sin(2 * np.pi * month / 12)
+    month_cos = np.cos(2 * np.pi * month / 12)
+
+    quarter_sin = np.sin(2 * np.pi * quarter / 4)
+    quarter_cos = np.cos(2 * np.pi * quarter / 4)
+
+    weekday = ts.dayofweek
+    is_weekend = int(weekday >= 5)
+
+    # ---------- PERCENTAGE CHANGE ----------
+    pct_1m = ((last_cases[-1] - last_cases[-2]) / last_cases[-2]) \
+        if len(last_cases) >= 2 and last_cases[-2] != 0 else 0
+
+    pct_3m = ((last_cases[-1] - last_3[0]) / last_3[0]) if last_3[0] != 0 else 0
+
+    # ---------- PER 1000 ----------
+    cases_per_1000 = (last_cases[-1] / population) * 1000
 
     return {
-        'Cases_Lag_1': float(last_row.get('Cases_Lag_1', 0)),
-        'Cases_Lag_2': float(last_row.get('Cases_Lag_2', 0)),
-        'Cases_Lag_3': float(last_row.get('Cases_Lag_3', 0)),
-        'Cases_Lag_6': float(last_row.get('Cases_Lag_6', 0)),
-        'Cases_Lag_12': float(last_row.get('Cases_Lag_12', 0)),
-        'Cases_Lag_24': float(last_row.get('Cases_Lag_24', 0)),
-        'Cases_Rolling_Avg_3M': float(last_row.get('Cases_Rolling_Avg_3M', 0)),
-        'Cases_Rolling_Avg_6M': float(last_row.get('Cases_Rolling_Avg_6M', 0)),
-        'Cases_Rolling_Avg_12M': float(last_row.get('Cases_Rolling_Avg_12M', 0)),
-        'Cases_Rolling_Avg_24M': float(last_row.get('Cases_Rolling_Avg_24M', 0)),
+        'Cases_Lag_1': lag_1,
+        'Cases_Lag_2': lag_2,
+        'Cases_Lag_3': lag_3,
+        'Cases_Lag_6': lag_6,
+        'Cases_Lag_12M': lag_12m,
+        'Cases_Rolling_Avg_3M': roll_3,
+        'Cases_Rolling_Avg_6M': roll_6,
+        'Trend': trend_val,
+        'Month': month,
+        'Month_sin': month_sin,
+        'Month_cos': month_cos,
+        'Quarter': quarter,
+        'Quarter_sin': quarter_sin,
+        'Quarter_cos': quarter_cos,
+        'Day_of_Week': weekday,
+        'Is_Weekend': is_weekend,
+        'Cases_Pct_Change_1M': pct_1m,
+        'Cases_Pct_Change_3M': pct_3m,
+        'Cases_per_1000': cases_per_1000
     }
