@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Label as Lbl} from "@/components/ui/label"
-import { useState } from "react"
+import { useState, useEffect} from "react"
 import {
   Dialog,
   DialogContent,
@@ -30,6 +30,12 @@ import {
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
 import { jsPDF } from "jspdf"
 import autoTable from "jspdf-autotable"
+import { supabase } from "@/makeclient"
+import Papa from "papaparse"
+import { toast } from "sonner"
+import { ActiveModel } from "@/components/admin/dash/acc"
+import { GetActiveModel } from "@/queries/getActiveModel"
+import { brgy_lbls } from "@/components/main/brgy_Table/brgy_label"
 
 export const months = [
     "January",
@@ -46,33 +52,104 @@ export const months = [
     "December",
 ]
 
+
 export default function Predict() {
     const currentYear = new Date().getFullYear()
     const years = Array.from({ length: currentYear - 2010 + 1 }, (_, i) => 2010 + i)
     const [ year_s, setYear ] = useState(currentYear.toString())
     const [ month_s, setMonth] = useState("1")
     const [ openPanel, setOpenPanel ] = useState(false)
-    const [predictions, setPredictions] = useState<any[]>([])
+    const [predictions, setPredictions] = useState<any>([])
+    const [activeModel, setActiveModel] = useState<ActiveModel | null>(null)
+
+    useEffect(() => {
+        const loadModels = async () => {
+        const active = await GetActiveModel()
+        setActiveModel(active)
+        }
+        loadModels()
+    }, [])
+
+
+    const fetchPredictions = async () => {
+        const historical = supabase
+            .storage
+            .from("models") 
+            .getPublicUrl("main_merged/historical_cases.csv").data.publicUrl
+
+        if (!activeModel) {
+            toast("No active model found!")
+            return
+        }
+
+        const csvUrl = parseInt(year_s) >= 2025 ? activeModel.file_url : historical
+        if (!csvUrl) {
+            toast("No CSV URL available for this model")
+            return
+        }
+
+        const response = await fetch(csvUrl)
+        const csvText = await response.text()
+
+        // Wrap parsing in a Promise
+        const data = await new Promise<any[]>((resolve) => {
+            Papa.parse(csvText, {
+            header: true,
+            skipEmptyLines: true,
+            complete: (result) => {
+                const rows = result.data
+                const targetYear = parseInt(year_s)
+                const targetMonth = parseInt(month_s)
+
+                const filtered = rows.filter(row => {
+                const rowYear = Number(String(row.YEAR || row.year || row.Year).trim())
+                const rowMonth = Number(String(row.MONTH || row.month || row.Month).trim())
+                return rowYear === targetYear && rowMonth === targetMonth
+                })
+
+                const labeled = filtered.map(row => ({
+                ...row,
+                BARANGAY_NAME: brgy_lbls[row.BARANGAY_ID]
+                }))
+
+                resolve(labeled)
+            }
+            })
+        })
+
+        return data
+    }
 
     const handleDownloadPDF = () => {
-
         const doc = new jsPDF();
 
-        doc.text("Prediction Results", 14, 10);
+        doc.text(`Prediction Results for: ${months[parseInt(month_s) - 1]} ${year_s}`, 14, 10);
 
         autoTable(doc, {
             head: [["Barangay", "Predicted Cases", "Risk Level"]],
-            body: predictions.map(p => [
-            p.BARANGAY,
-            p.Predicted_Cases.toFixed(2),
-            p.Risk_Level // format as 2 decimals
-            ]),
+            body: predictions.map(p => {
+                // Map BARANGAY_ID to name
+                const barangayName = brgy_lbls[p.BARANGAY_ID] || p.BARANGAY_ID;
+
+                // Compute Risk_Level based on predicted cases
+                const cases = Number(p.Predicted_Cases);
+                let riskLevel = '';
+                if (cases <= 3) riskLevel = 'Low';
+                else if (cases <= 7) riskLevel = 'Medium';
+                else riskLevel = 'High';
+
+                return [
+                    barangayName,
+                    cases.toFixed(2),
+                    riskLevel
+                ];
+            }),
             startY: 20,
         });
 
-
         doc.save(`prediction_${new Date().toISOString()}.pdf`);
-    }
+    };
+
 
     const handleDownloadCSV = () => {
         
@@ -101,7 +178,7 @@ export default function Predict() {
         <Card className="flex flex-col h-full">
             <CardHeader className="items-center text-center justify-center pb-1">
                 <CardTitle>Batch Predict and Export</CardTitle>
-                <CardDescription>Current Active Model: {}</CardDescription>
+                <CardDescription>Current Active Dataset: {activeModel?.model_name}</CardDescription>
             </CardHeader>
             <CardContent className="grid pb-0 h-full w-full">
                 <div className="col-span-1 lg:col-span-8 grid grid-cols-4 lg:grid-cols-8 gap-3 lg:gap-5 mb-3 font-[Formula] items-center">
@@ -139,12 +216,7 @@ export default function Predict() {
                             <Button 
                     className="col-span-8 justify-center items-center"
                     onClick={async() => {
-                        const response = await fetch("https://dasmaprevived-production.up.railway.app/predict", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ year: parseInt(year_s), month: parseInt(month_s)}),
-                            })
-                        const data = await response.json()
+                        const data = await fetchPredictions()
                         setPredictions(data)
                         setOpenPanel(true)
                     }}>
@@ -165,13 +237,18 @@ export default function Predict() {
                             </TableRow>
                             </TableHeader>
                             <TableBody>
-                            {predictions.map((row, i) => (
+                            {predictions.map((row, i) => {
+                                const cases = Number(row.Predicted_Cases);
+                                const riskLevel = cases < 4 ? "Low" : cases <= 7 ? "Medium" : "High";
+
+                                return (
                                 <TableRow key={i}>
-                                <TableCell>{row.BARANGAY}</TableCell>
-                                <TableCell>{row.Predicted_Cases}</TableCell>
-                                <TableCell>{row.Risk_Level}</TableCell>
+                                    <TableCell>{brgy_lbls[Number(row.BARANGAY_ID)]}</TableCell>
+                                    <TableCell>{cases.toFixed(2)}</TableCell>
+                                    <TableCell>{riskLevel}</TableCell>
                                 </TableRow>
-                            ))}
+                                );
+                            })}
                             </TableBody>
                         </Table>
                     <Button onClick={handleDownloadPDF}>

@@ -70,6 +70,13 @@ function RouteComponent() {
           <CardTitle>Login to an Admin Account</CardTitle>
           <CardDescription>
             Enter Credentials Below
+            <br />
+            <br />
+            *For Testing
+            <br />
+            Email: dasm4114@dasmap.com
+            <br />
+            Password: Dasmap123
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -80,7 +87,7 @@ function RouteComponent() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="maxver33@gmail.com"
+                  placeholder="@dasmap.com"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   required

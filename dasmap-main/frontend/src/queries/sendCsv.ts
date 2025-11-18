@@ -59,7 +59,7 @@ export default async function SendCsv(payload: SendCsvPayload) {
   // -----------------------------
   // 4. Insert MODEL DETAILS into Models table
   // -----------------------------
-  const { error: modelError } = await supabase
+  /*{const { error: modelError } = await supabase
     .from("Models")
     .insert([
       {
@@ -74,7 +74,7 @@ export default async function SendCsv(payload: SendCsvPayload) {
   if (modelError) {
     toast(`❌ Error saving model details: ${modelError.message}`)
     return
-  }
+  }}*/
 
   toast("✅ File + Model details uploaded successfully!")
 

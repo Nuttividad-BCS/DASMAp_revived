@@ -40,7 +40,7 @@ import { DashBoard } from '@/components/main/dashboard/drawer'
 import * as THREE from "three"
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import Header from '../components/main/Header'
-import { Bug } from "lucide-react"
+import { Bug, Info} from "lucide-react"
 import TopFive from "@/components/main/outerStats/topfive"
 import { GetActiveModel } from "@/queries/getActiveModel"
 import { ActiveModel } from "@/components/admin/dash/acc"
@@ -50,6 +50,8 @@ import { brgy_lbls } from "@/components/main/brgy_Table/brgy_label"
 import { supabase } from "@/makeclient"
 import { useQuery } from "@tanstack/react-query"
 import {toast} from 'sonner'
+import Terms from "@/components/main/terms"
+
 interface RefStruct {
   [key: string]: any
 }
@@ -123,6 +125,7 @@ export const invertedBarangayAlias: Record<string, string> = {
 export default function App() {
   const [activeModel, setActiveModel] = useState<ActiveModel | null>(null)
   const [ open, setOpen ] = useState(false)
+  const [ openInfo, setOpenInfo ] = useState(true)
   const [ mapOn, setMapOn ] = useState(false)
   const [autorotate, setautorotate] = useState(true)
   const [activeBarangay, setActiveBarangay] = useState("")
@@ -383,17 +386,24 @@ export default function App() {
       onHover={hoveredBrgy}
     >
       <div className="flex flex-col flex-1 justify-content-center min-h-screen bg-[#1D2129]">
+        <Terms openInfo={openInfo} setOpenInfo={setOpenInfo}/>
         <Header />
         <div className="fixed top-2 left-2 z-50">
           <SidebarTrigger />
         </div>
-        <div className="fixed bottom-15 left-1/2 z-50 lg:hidden -translate-x-1/2">
+        <div className="fixed bottom-16 left-1/2 -translate-x-1/2 z-50 flex gap-4">
+          {/* Info Button */}
           <Button
-            onClick={() => {
-              setOpen(true)
-            }
-            }
+            onClick={() => setOpenInfo(true)}
             className="w-[50px] h-[50px] rounded-4xl bg-red-700"
+          >
+            <Info />
+          </Button>
+
+          {/* Bug Button (hidden on LG and above) */}
+          <Button
+            onClick={() => setOpen(true)}
+            className="w-[50px] h-[50px] rounded-4xl bg-red-700 lg:hidden"
           >
             <Bug />
           </Button>
@@ -534,7 +544,7 @@ export default function App() {
           </div>
         )}
         <Label className="text-gray-600 font-[Formula]">Confidence Level: {activeModel ? `${(activeModel.model_acc * 100).toFixed(2)}%` : "Loading..."}</Label>
-        <Label className="text-gray-600 font-[Formula]">Last Model Update: January 1, 2025</Label>
+        <Label className="text-gray-600 font-[Formula]">Last Model Update: November 13, 2025</Label>
   
         {/*
         <div className={`h-screen w-full`}>

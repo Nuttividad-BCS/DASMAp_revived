@@ -78,8 +78,8 @@ export default function CurrentAcc() {
   return (
     <Card className="flex flex-col h-full overflow-y-auto scroll-hidden">
       <CardHeader className="items-center justify-center text-center pb-0">
-        <CardTitle>Forecast Models</CardTitle>
-        <CardDescription>Current Active Model: {activeModel?.model_name}</CardDescription>
+        <CardTitle>Forecast Datasets</CardTitle>
+        <CardDescription>Current Active Dataset: {activeModel?.model_name}</CardDescription>
       </CardHeader>
       <CardContent className="grid grid-cols-1 pb-0 h-full">
         <ChartContainer
