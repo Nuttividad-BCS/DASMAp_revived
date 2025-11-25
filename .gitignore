@@ -12,4 +12,4 @@ myvenv/
 .DS_Store
 Thumbs.db
 .env.local
-.vite/deps/
+`**.vite/deps/
