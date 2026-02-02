@@ -133,7 +133,7 @@ export default function App() {
   const [hoveredBrgy, setHoveredBrgy] = useState<string | null>(null)
   const brgyRef = useRef<RefStruct>({})
   const currentYear = new Date().getFullYear()
-  const years = Array.from({ length: currentYear - 2010 + 2 }, (_, i) => 2010 + i)
+  const years = Array.from({ length: 2026 - 2010 + 1 }, (_, i) => 2010 + i)
   const [month_s, setMonth] = useState<string>("")
   const [year_s, setYear] = useState<string>("")
   const [ pred, setPred ] = useState<any[]>([])
@@ -388,35 +388,87 @@ export default function App() {
       <div className="flex flex-col flex-1 justify-content-center min-h-screen bg-[#1D2129]">
         <Terms openInfo={openInfo} setOpenInfo={setOpenInfo}/>
         <Header />
+        
         <div className="fixed top-2 left-2 z-50">
           <SidebarTrigger />
         </div>
-        <div className="fixed bottom-16 left-1/2 -translate-x-1/2 z-50 flex gap-4">
+        
+        <div className="fixed bottom-45 left-10 lg:bottom-16 lg:left-1/2 lg:-translate-x-1/2 z-50 flex gap-4">
           {/* Info Button */}
           <Button
             onClick={() => setOpenInfo(true)}
-            className="w-[50px] h-[50px] rounded-4xl bg-red-700"
+            className="lg:w-[50px] lg:h-[50px] w-[40px] h-[40px] rounded-4xl bg-red-700"
           >
             <Info />
           </Button>
-
-          {/* Bug Button (hidden on LG and above) */}
+          {/* How to Use Button - Desktop Only */}
           <Button
-            onClick={() => setOpen(true)}
-            className="w-[50px] h-[50px] rounded-4xl bg-red-700 lg:hidden"
+            onClick={() => window.open('https://youtu.be/zdFgHLIszH8', '_blank')}
+            className="hidden lg:block lg:w-[110px] lg:h-[50px] rounded-4xl bg-red-700"
           >
-            <Bug />
+            <Lbl className="text-sm">How to Use?</Lbl>
           </Button>
         </div>
-        <div className="fixed lg:bottom-[5%] lg:right-[2.5%] z-50 hidden lg:block ">
-            <Card className="flex flex-col h-full bg-[#1D2126] text-white">
+
+        <div className="fixed bottom-45 right-5 lg:hidden z-50 flex gap-4">
+          {/* How to Use - Mobile Only */}
+          <Button
+            onClick={() => window.open('https://youtu.be/zdFgHLIszH8', '_blank')}
+            className="w-[85px] h-[40px] rounded-4xl bg-red-700"
+          >
+           <Lbl className="text-sm">How to Use?</Lbl>
+          </Button>
+        </div>
+        
+        <div className="fixed lg:bottom-[5%] lg:right-[2.5%] z-50 hidden lg:w-[20vw] lg:max-w-[40vw] lg:block">
+          {/* Grid container for case intensity legend and heatmap visualizer */}
+          <div className="grid grid-rows-2 place-items-end gap-2">
+            {/* Case Intensity Legend */}
+            <div className="bg-[#1D2126] h-25 border w-full border-white-600 rounded-lg px-6 py-4 flex items-center justify-center">
+              <div className="flex flex-col items-center gap-2 mb-4 w-full">
+                <span className="text-sm font-semibold text-white">Case Intensity Legend</span>
+                <div className="flex items-center gap-4 w-full">
+                  <span className="text-xs text-white">0</span>
+                  <div className="relative w-full">
+                    <div className="w-full h-4 rounded" style={{
+                      background: `linear-gradient(to right, 
+                        rgb(255, 204, 204), 
+                        rgb(255, 153, 153), 
+                        rgb(255, 102, 102), 
+                        rgb(255, 51, 51), 
+                        rgb(255, 0, 0))`
+                    }}></div>
+                    {/* Gauge markings */}
+                    <div className="absolute top-4 left-0 w-full flex justify-between text-xs text-white mt-3">
+                      <span className="transform -translate-x-1/2">0</span>
+                      <span className="transform -translate-x-1/2">8</span>
+                      <span className="transform -translate-x-1/2">16</span>
+                      <span className="transform -translate-x-1/2">24</span>
+                      <span className="transform translate-x-1/2">30+</span>
+                    </div>
+                    {/* Tick marks */}
+                    <div className="absolute top-0 left-0 w-full flex justify-between">
+                      <div className="w-0.5 h-6 bg-white"></div>
+                      <div className="w-0.5 h-6 bg-white"></div>
+                      <div className="w-0.5 h-6 bg-white"></div>
+                      <div className="w-0.5 h-6 bg-white"></div>
+                      <div className="w-0.5 h-6 bg-white"></div>
+                    </div>
+                  </div>
+                  <span className="text-xs text-white">30+</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Heatmap Visualizer Card */}
+            <Card className="flex flex-col w-full h-full bg-[#1D2126] text-white">
             <CardHeader className="items-center text-center justify-center pb-1">
                 <CardTitle>Heatmap Visualizer</CardTitle>
                 <CardDescription>Change Year and Month Below</CardDescription>
             </CardHeader>
             <CardContent className="grid pb-0 h-full w-full">
                 <div className="col-span-1 lg:col-span-8 grid grid-cols-4 lg:grid-cols-8 gap-3 lg:gap-5 mb-3 font-[Formula] items-center">
-                  <Lbl className="lg:col-span-2 text-xl">Year:</Lbl>
+                  <Lbl className="lg:col-span-2 text-sm lg:text-md">Year:</Lbl>
                   <Select value={year_s} onValueChange={setYear}>
                       <SelectTrigger className="w-full col-span-3 lg:col-span-6">
                           <SelectValue placeholder="Select a Year" />
@@ -432,14 +484,16 @@ export default function App() {
                           </SelectGroup>
                       </SelectContent>
                   </Select>
-                  <Lbl className="lg:col-span-2 text-xl lg:justify-self-end">Month:</Lbl>
+                  <Lbl className="lg:col-span-2 text-sm lg:text-md lg:justify-self-end">Month:</Lbl>
                   <Select value={month_s} onValueChange={setMonth}>
                   <SelectTrigger className="w-full col-span-3 lg:col-span-6">
                       <SelectValue placeholder="Select a Month" />
                   </SelectTrigger>
                   <SelectContent>
                       <SelectGroup>
-                      {months.map((month, index) => (
+                      {months
+                        .filter((_, index) => !(year_s === "2026" && index > 4))
+                        .map((month, index) => (
                           <SelectItem key={index + 1} value={(index + 1).toString()}>
                           {month}
                           </SelectItem>
@@ -460,26 +514,61 @@ export default function App() {
                 </Button>
             </CardFooter>
         </Card>
+          </div>
         </div>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent className="text-white sm:max-w-[500px] bg-[#1D2126] text-white border-[#3d4452]">
-            <DialogHeader>
-              <DialogTitle className="text-center text-xl font-semibold">
-                Heatmap Visualizer
-              </DialogTitle>
-              <DialogDescription className="text-center text-gray-400">
-                Change Year and Month Below
-              </DialogDescription>
-            </DialogHeader>
+        {/* Mobile Case Intensity Legend - Vertical on Right */}
+        <div className="fixed top-1/2 right-4 transform -translate-y-1/2 z-40 lg:hidden">
+          <div className="bg-[#1D2126]/80 bg-opacity-5 border border-white-20 rounded-lg p-1 flex flex-col items-center">
+            <div className="flex items-center gap-1">
+              <div className="relative h-60 w-2">
+                <div className="w-full h-full rounded" style={{
+                  background: `linear-gradient(to bottom, 
+                    rgb(255, 0, 0),
+                    rgb(255, 51, 51), 
+                    rgb(255, 102, 102), 
+                    rgb(255, 153, 153), 
+                    rgb(255, 204, 204))`
+                }}></div>
+                {/* Tick marks */}
+                <div className="absolute left-0 top-0 h-full flex flex-col justify-between">
+                  <div className="h-0.5 w-3 bg-white -ml-0.5"></div>
+                  <div className="h-0.5 w-3 bg-white -ml-0.5"></div>
+                  <div className="h-0.5 w-3 bg-white -ml-0.5"></div>
+                  <div className="h-0.5 w-3 bg-white -ml-0.5"></div>
+                  <div className="h-0.5 w-3 bg-white -ml-0.5"></div>
+                </div>
+              </div>
+              {/* Numerical values beside the bar */}
+              <div className="h-48 flex flex-col justify-between text-xs text-white ml-1">
+                <span className="transform -translate-y-1/2">30+</span>
+                <span className="transform -translate-y-1/2">24</span>
+                <span className="transform -translate-y-1/2">16</span>
+                <span className="transform -translate-y-1/2">8</span>
+                <span className="transform translate-y-1/2">0</span>
+              </div>
+            </div>
+            <div className="flex flex-col items-center mt-2 gap-0.5">
+              <span className="text-xs font-semibold text-white">Case</span>
+              <span className="text-xs font-semibold text-white">Intensity</span>
+            </div>
+          </div>
+        </div>
 
-            <Card className="bg-transparent border-0 shadow-none">
-              <CardContent className="grid pb-0 h-full w-full">
-                <div className="grid grid-cols-4 gap-4 items-center">
-                  <Lbl className="col-span-1 text-sm text-white font-[Formula]">Year:</Lbl>
-                  
+        {/* Mobile Heatmap Visualizer Card - Hidden on LG and MD screens */}
+        <div className="fixed bottom-4 left-4 right-4 z-40 lg:hidden">
+          <Card className="bg-[#1D2126] text-white border-[#3d4452]">
+            <CardHeader className="text-center pb-0">
+              <CardTitle className="text-sm font-semibold">
+                Heatmap Visualizer
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pb-0 pt-2">
+              <div className="grid grid-cols-2 gap-1">
+                <div className="space-y-0.5">
+                  <Lbl className="text-xs text-white font-[Formula]">Year:</Lbl>
                   <Select value={year_s} onValueChange={setYear}>
-                    <SelectTrigger className="w-full col-span-3 bg-[#2a2f38] text-white border-[#3d4452]">
-                      <SelectValue placeholder="Select a Year" />
+                    <SelectTrigger className="w-full bg-[#2a2f38] text-white border-[#3d4452] h-6 text-xs">
+                      <SelectValue placeholder="Select Year" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
@@ -492,16 +581,17 @@ export default function App() {
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-
-                  <Lbl className="col-span-1 text-sm text-white font-[Formula]">Month:</Lbl>
+                </div>
+                <div className="space-y-0.5">
+                  <Lbl className="text-xs text-white font-[Formula]">Month:</Lbl>
                   <Select value={month_s} onValueChange={setMonth}>
-                    <SelectTrigger className="w-full col-span-3 bg-[#2a2f38] text-white border-[#3d4452]">
-                      <SelectValue placeholder="Select a Month" />
+                    <SelectTrigger className="w-full bg-[#2a2f38] text-white border-[#3d4452] h-6 text-xs">
+                      <SelectValue placeholder="Select Month" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
                         {months
-                          .filter((_, index) => !(year_s === "2026" && index > 4)) // only Jan–May for 2026
+                          .filter((_, index) => !(year_s === "2026" && index > 4))
                           .map((month, index) => (
                             <SelectItem key={index + 1} value={(index + 1).toString()}>
                               {month}
@@ -511,12 +601,11 @@ export default function App() {
                     </SelectContent>
                   </Select>
                 </div>
-              </CardContent>
-            </Card>
-
-            <DialogFooter>
+              </div>
+            </CardContent>
+            <CardFooter className="pt-0.5 pb-1">
               <Button
-                className="w-full mt-3"
+                className="w-full h-6 text-xs"
                 variant="destructive"
                 onClick={() => {
                   setYear("")
@@ -526,9 +615,9 @@ export default function App() {
               >
                 Heatmap Off
               </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+            </CardFooter>
+          </Card>
+        </div>
 
         {mapOn && (
           <div className="fixed top-6 right-11 lg:right-5 z-50">

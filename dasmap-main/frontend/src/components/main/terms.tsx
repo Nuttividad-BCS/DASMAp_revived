@@ -46,6 +46,9 @@ export default function Terms({openInfo, setOpenInfo} : {openInfo:boolean, setOp
                     <li>
                        As more recent data becomes available, the system can be updated to improve accuracy. 
                     </li>
+                    <li>
+                        Poplation data is <strong>ESTIMATED</strong> using the growth rate from philatlas.com and is <strong>NOT EXACT</strong>.
+                    </li>
                 </ul>
                 <Button 
                     onClick={() => {setOpenInfo(false)}}

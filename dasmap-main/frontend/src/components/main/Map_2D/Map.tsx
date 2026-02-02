@@ -45,7 +45,7 @@ export const DasMap2D: React.FC<MapActions2D> = ({
             <TransformComponent>
 
               <Map2D
-                className="w-full h-[85vh] lg:h-[88vh] border-none"
+                className="w-full h-[75vh] lg:h-[88vh] border-none"
                 onMouseOver={(e) => {
                   const target = e.target as SVGElement;
                   if (target.tagName === "path") {
