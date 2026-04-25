@@ -35,7 +35,7 @@ import Papa from "papaparse"
 import { toast } from "sonner"
 import { ActiveModel } from "@/components/admin/dash/acc"
 import { GetActiveModel } from "@/queries/getActiveModel"
-import { brgy_lbls } from "@/components/main/brgy_Table/brgy_label"
+import { brgy_lbls } from "@/components/main/brgy_label"
 
 export const months = [
     "January",
