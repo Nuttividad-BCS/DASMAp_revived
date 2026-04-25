@@ -1,10 +1,10 @@
 "use client"
-import { Button } from '@/components/ui/button'
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from "react"
+import { Info} from "lucide-react"
 
 import Header from '../components/main/Header'
-import { Bug, Info} from "lucide-react"
+import { Button } from '@/components/ui/button'
 import Terms from "@/components/main/terms"
 import PowerBiDash from "@/components/main/powerbiDash"
 
@@ -16,11 +16,11 @@ export const Route = createFileRoute("/")({
 export default function App() {
   const [ openInfo, setOpenInfo ] = useState(true)
     return (
-      <div className="flex flex-col flex-1 justify-content-center min-h-screen bg-[#1D2129]">
+      <div className="flex h-screen flex-col overflow-hidden bg-[#1D2129]">
         <Terms openInfo={openInfo} setOpenInfo={setOpenInfo}/>
         <Header />
         
-        <div className="fixed bottom-45 left-10 lg:bottom-16 lg:left-1/2 lg:-translate-x-1/2 z-50 flex gap-4">
+        <div className="fixed bottom-45 left-10 lg:bottom-5 lg:left-1/2 lg:-translate-x-1/2 z-50 flex gap-4">
           {/* Info Button */}
           <Button
             onClick={() => setOpenInfo(true)}
@@ -37,9 +37,11 @@ export default function App() {
           </Button>
           */}
         </div>
-        <PowerBiDash />
-      </div>
-    
+
+        <div className="flex-1 min-h-0">
+          <PowerBiDash />
+        </div>
+      </div>  
   )
 }
 
