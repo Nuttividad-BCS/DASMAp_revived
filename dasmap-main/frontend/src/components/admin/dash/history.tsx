@@ -29,7 +29,10 @@ export default function HistoryList() {
         <TableHeader>
           <TableRow className="bg-gray-200 hover:none pointer-events-none">
             <TableHead className="rounded-tl-xl">Model Name</TableHead>
-            <TableHead>Accuracy</TableHead>
+            <TableHead>Classification Accuracy</TableHead>
+            <TableHead>R2</TableHead>
+            <TableHead>MAE</TableHead>
+            <TableHead>RMSE</TableHead>
             <TableHead>Model Size</TableHead>
             <TableHead>Model Status</TableHead>
             <TableHead className="rounded-tr-xl">Date Created</TableHead>
@@ -41,6 +44,9 @@ export default function HistoryList() {
               <TableRow key={model.model_name}>
                 <TableCell>{model.model_name}</TableCell>
                 <TableCell>{(model.model_acc * 100).toFixed(2)}%</TableCell>
+                <TableCell>{model.R2}</TableCell>
+                <TableCell>{model.MAE}</TableCell>
+                <TableCell>{model.RMSE}</TableCell>
                 <TableCell>{`${model.model_size} MB`}</TableCell>
                 <TableCell>
                     <div className="flex items-center gap-2">

@@ -14,7 +14,7 @@ export async function FetchModels(): Promise<Models[]> {
   // Fetch data from Supabase
   const { data, error } = await supabase
     .from("Models")
-    .select("id, model_name, model_acc, date_created, model_size, model_status")
+    .select("id, model_name, model_acc, R2, MAE, RMSE,date_created, model_size, model_status")
 
   if (error) {
     toast(`Error fetching models: ${error}`)
@@ -25,6 +25,9 @@ export async function FetchModels(): Promise<Models[]> {
   const models: Models[] = data.map((row: any) => ({
     model_name: row.model_name,
     model_acc: row.model_acc,
+    R2: row.R2,
+    MAE: row.MAE,
+    RMSE: row.RMSE,
     id: row.id,
     date_created: row.date_created,
     model_status: row.model_status,

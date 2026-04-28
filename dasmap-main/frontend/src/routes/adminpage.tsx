@@ -14,10 +14,9 @@ import { Label } from "@/components/ui/label"
 import CurrentAcc from "@/components/admin/dash/acc"
 import DropZone from "@/components/admin/dash/drop"
 import HistoryList from "@/components/admin/dash/history"
-import CsvList from '@/components/admin/dash/csvs'
-import Predict from '@/components/admin/dash/batch_predict'
 import { useNavigate } from '@tanstack/react-router'
 import { supabase } from '@/makeclient'
+import CsvinfoPanel from "@/components/admin/dash/csvguide"
 
 export const Route = createFileRoute('/adminpage')({
   component: RouteComponent,
@@ -67,14 +66,11 @@ function RouteComponent() {
         <div className="mr-3 ml-3 lg:col-span-1 lg:h-[50vh]">
           <CurrentAcc />
         </div>
-        <div className="mr-3 ml-3 lg:col-span-1 lg:h-[50vh]">
-          <CsvList />
-        </div>
-        <div className="mr-3 ml-3 lg:col-span-1 lg:h-[50vh]">
-          <Predict />
-        </div>
-        <div className="mr-3 ml-3 lg:col-span-1 lg:h-[50vh]">
+        <div className="mr-3 ml-3 lg:col-span-2 lg:h-[50vh]">
           <DropZone />
+        </div>
+        <div className="mr-3 ml-3 lg:col-span-1 lg:h-[50vh]">
+          <CsvinfoPanel />
         </div>
         <div className="mr-3 ml-3 lg:col-span-4 lg:h-[50vh]">
           <HistoryList />

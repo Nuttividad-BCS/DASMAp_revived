@@ -1,147 +1,195 @@
-import { Label } from "@/components/ui/label"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+"use client";
+
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  DialogFooter
-} from "@/components/ui/dialog"
-import { useForm } from "react-hook-form"
-import { Dropzone, DropzoneContent, DropzoneEmptyState } from '@/components/ui/shadcn-io/dropzone'
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { toast } from "sonner"
-import { Input } from "@/components/ui/input"
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import SendCsv from "@/queries/sendCsv"
-import SendModelDeets from "@/queries/sendModelDeets"
-import SendModel from "@/queries/sendModel"
 
-interface ModelFormValues {
-  model_name: string;
-  model_acc: number;
-  date_created: string;
-  model_size: number;
-}
-
-
+import { Dropzone, DropzoneContent, DropzoneEmptyState } from '@/components/ui/shadcn-io/dropzone'
 
 export default function DropZone() {
-    const { register, handleSubmit, reset } = useForm<ModelFormValues>()
-    const [open, setOpen] = useState(false)
-    const [files, setFiles] = useState<File[] | undefined>()
+  const { register, handleSubmit, reset, setValue } = useForm({
+  defaultValues: {
+    R2: "",
+    MAE: "",
+    RMSE: "",
+    model_acc: "",
+    model_type: "",
+    model_size: "",
+    date_created: ""
+  }
+})
 
-    const handleDrop = (files: File[]) => {
-        setFiles(files)
+  const [open, setOpen] = useState(false);
+  const [files, setFiles] = useState<File[] | undefined>();
+
+  const handleDrop = (files: File[]) => {
+    setFiles(files);
+  };
+
+  const submitAll = async (data: any) => {
+  
+    if (!files?.[0]) {
+      toast("Please select a CSV file");
+      return;
     }
 
-    const submitAll = async (data: ModelFormValues) => {
-        if (!files?.[0]) {
-        toast("Please select a CSV file")
-        return
-        }
-
-        await SendCsv({
-        file: files[0],
-        ...data,
-        })
-
-        reset()
-        setFiles([])
-        setOpen(false)
+    if (!files[0].name.endsWith(".csv")) {
+      toast("❌ Please upload a valid CSV file");
+      return;
     }
 
-    function HandleUpload() {
+    await SendCsv({
+      file: files[0],
+      ...data,
+    });
 
+    reset();
+    setFiles([]);
+    setOpen(false);
+  };
+
+  function HandleUpload() {
     return (
-        <Dialog onOpenChange={setOpen} open={open}>
-            <DialogContent>
-                <DialogTitle>Upload CSV File</DialogTitle>
-                <DialogDescription>
-                Please fill out the details and select a file to upload.
-                </DialogDescription>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-md">
+          <DialogTitle>Update Model Predictions</DialogTitle>
+          <DialogDescription>
+            Select model, metrics, and define update range (2025–2026 only).
+          </DialogDescription>
 
-                <form onSubmit={handleSubmit(submitAll)} className="grid gap-5 mt-2">
-                <div>
-                    <Label className="mb-2">CSV Name</Label>
-                    <Input type="text" {...register("model_name", { required: true })} />
-                </div>
+          <form onSubmit={handleSubmit(submitAll)} className="grid gap-4 mt-3">
 
-                <div>
-                    <Label className="mb-2">CSV Accuracy (0-1)</Label>
-                    <Input
-                    type="number"
-                    step="0.01"
-                    {...register("model_acc", { required: true, min: 0, max: 1 })}
-                    />
-                </div>
+            {/* MODEL SELECT */}
+            <div>
+              <Label className="mb-2">Model *</Label>
+              <Select
+                onValueChange={(value) => {
+                  setValue("model_type", value)
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select model" />
+                </SelectTrigger>
 
-                <div>
-                    <Label className="mb-2">Date Created</Label>
-                    <Input type="date" {...register("date_created", { required: true })} />
-                </div>
+                <SelectContent>
+                  <SelectItem value="RF">Random Forest</SelectItem>
+                  <SelectItem value="XGB">XGBoost</SelectItem>
+                  <SelectItem value="LightGBM">LightGBM</SelectItem>
+                  <SelectItem value="Hybrid">Hybrid</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-                <div>
-                    <Label className="mb-2">CSV Size (MB)</Label>
-                    <Input
-                    type="number"
-                    step="0.01"
-                    {...register("model_size", { required: true, min: 0 })}
-                    />
-                </div>
+            {/* METRICS */}
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <Label>Classification Accuracy</Label>
+                <Input type="number" step="0.01" min={0} max={1} {...register("model_acc", { required: true })} />
+              </div>
 
-                <DialogFooter className="flex justify-self-center gap-2">
-                    <Button type="submit">Upload</Button>
-                    <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-                </DialogFooter>
-                </form>
-            </DialogContent>
-            </Dialog>
-    )
-    }
+              <div>
+                <Label>R² Score</Label>
+                <Input type="number" step="0.01" {...register("R2", { required: true })} />
+              </div>
 
-    return (
-        <>
-        <Card className="h-full">
-            <CardHeader>
-                <CardTitle>Upload CSV File for System Updation</CardTitle>
-                <CardDescription>Please Follow the CSV Format</CardDescription>
-            </CardHeader>
-            <CardContent className="h-full grid grid-cols-4 gap-3 justify-center items-center">
-                <Dropzone
-                    className="h-full col-span-4 ring-1 ring-gray-400 "
-                    maxFiles={1}
-                    onDrop={handleDrop}
-                    onError={console.error}
-                    src={files}
-                    >
-                    <DropzoneEmptyState />
-                    <DropzoneContent />
-                </Dropzone>
-                <Button
-                    className="col-span-4" 
-                    onClick={() => {
-                        if (!files || files.length === 0) {
-                            toast('Please upload a file first!')
-                            setOpen(false)
-                        } else{ 
-                            setOpen(true)
-                        }
-                    }}>
-                    Submit Csv
-                </Button>
-            </CardContent>
-        </Card>
-        <HandleUpload />
-        </>
-    )
+              <div>
+                <Label>MAE</Label>
+                <Input type="number" step="0.01" {...register("MAE", { required: true })} />
+              </div>
+
+              <div>
+                <Label>RMSE</Label>
+                <Input type="number" step="0.01" {...register("RMSE", { required: true })} />
+              </div>
+            </div>
+
+            {/* DATE CREATED */}
+            <div>
+              <Label>Date Updated</Label>
+              <Input type="date" {...register("date_created", { required: true })} />
+            </div>
+
+            {/* CSV SIZE */}
+            <div>
+              <Label>CSV Size (MB)</Label>
+              <Input type="number" step="0.01" {...register("model_size", { required: true })} />
+            </div>
+
+
+            <DialogFooter className="flex gap-2 justify-end">
+              <Button type="submit">Upload</Button>
+              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                Cancel
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  return (
+    <Card className="h-full">
+      <CardHeader>
+        <CardTitle>Upload CSV File for Model Update</CardTitle>
+        <CardDescription>
+          Update prediction data for 2025–2026 only
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent className="grid gap-3">
+        <Dropzone
+          className="ring-1 ring-gray-300"
+          maxFiles={1}
+          accept={{ "text/csv": [".csv"] }}
+          onDrop={handleDrop}
+          src={files}
+        >
+          <DropzoneEmptyState />
+          <DropzoneContent />
+        </Dropzone>
+
+        <Button
+          onClick={() => {
+            if (!files?.length) {
+              toast("Please upload a CSV first");
+              return;
+            }
+            setOpen(true);
+          }}
+        >
+          Continue
+        </Button>
+      </CardContent>
+
+      <HandleUpload />
+    </Card>
+  );
 }
+

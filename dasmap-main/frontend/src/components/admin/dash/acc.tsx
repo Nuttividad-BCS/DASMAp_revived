@@ -31,6 +31,9 @@ export interface ActiveModel {
   id?: string
   model_name: string
   model_acc: number
+  R2: number
+  MAE: number
+  RMSE: number
   model_status?: boolean
   model_size?: number
   date_created? : Date
@@ -143,7 +146,6 @@ export default function CurrentAcc() {
         <TableHeader>
           <TableRow>
             <TableHead>Model Name</TableHead>
-            <TableHead>Accuracy</TableHead>
             <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
@@ -152,7 +154,6 @@ export default function CurrentAcc() {
             models.map((model) => (
               <TableRow key={model.model_name}>
                 <TableCell>{model.model_name}</TableCell>
-                <TableCell>{(model.model_acc * 100).toFixed(2)}%</TableCell>
                 <TableCell>
                   <Button
                     size="sm"     
