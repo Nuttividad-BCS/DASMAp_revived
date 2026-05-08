@@ -163,9 +163,9 @@ export default function DropZone() {
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="grid gap-3">
+      <CardContent className="grid gap-3 flex flex-col h-full">
         <Dropzone
-          className="ring-1 ring-gray-300"
+          className="ring-1 ring-gray-300 flex-1"
           maxFiles={1}
           accept={{ "text/csv": [".csv"] }}
           onDrop={handleDrop}
